@@ -1,0 +1,15 @@
+import app from "./src/app.js";
+import http from "http";
+import { Server } from "socket.io";
+import socketHandler from "./src/sockets/socketHandler.js";
+const port = 5000;
+
+const server = http.createServer(app); //Convert app to http server
+const io = new Server(server, {     //Create socket.io server => attach to http server
+    cors: ""
+})
+socketHandler(io); //Pass socket.io instance to logic 
+
+server.listen(port, () => {
+    console.log(`Server running on port ${port}`)
+});
