@@ -41,5 +41,10 @@ export default function socketHandler(io) {
             console.log(socket.id, "stop_dragging");
             socket.broadcast.emit("stop_dragging", items);
         })
+
+        socket.on("update_kanban", (items) => {
+            console.log("update_kanban");
+            socket.broadcast.emit("update_kanban", items);
+        })
     })
 }

@@ -5,6 +5,7 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import connectionRoutes from "./routes/connectionRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
+import kanbanRoutes from "./routes/kanbanRoutes.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/connections", connectionRoutes);
 app.use("/messages", messageRoutes);
+app.use("/kanban", kanbanRoutes);
 
 
 export default app;

@@ -1,5 +1,6 @@
 import useTokenDecode from "../hooks/useTokenDecode";
-import useChat from "../hooks/useChat";
+import useChat from "../hooks/chat/useChat";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 export default function App() {
     const {payload} = useTokenDecode();
@@ -13,32 +14,39 @@ export default function App() {
         typing,
         connection,
         getConnection,
-        logout
+        setConnection,
+        logout,
     } = useChat(payload?.username);
 
 
     if(!payload) return <p>Loading...</p>
 
     return <div className="app">
-        <div className="section left">
-            {!users? <p>Loading...</p> : users.map(user => (
-                <div className="user" onClick={() => getConnection(user.username)}>
-                    <div className="picture">
-                        <img src="/images/profile.svg" alt="" />
-                        <div className={`status ${user.status==="online"? "online" : ""}`} ></div>
+        <div className="section left" onClick={() => setConnection(null)}>
+            <div className="entry">
+                <h2>Chats</h2>
+                <input type="text" placeholder="Search user"/>
+            </div>
+
+            <div className="users">
+                {!users? <p>Loading...</p> : users.map(user => (
+                    <div className="user" onClick={(e) => {e.stopPropagation(); getConnection(user.username)}}>
+                        <div className="picture">
+                            <img src="/images/profile.svg" alt="" />
+                            <div className={`status ${user.status==="online"? "online" : ""}`} ></div>
+                        </div>
+                        <p>{user.username}</p>
                     </div>
-                    <p>{user.username}</p>
-                </div>
-            )) }
+                )) }
+            </div>
 
             <p onClick={logout} >Logout</p>
         </div>
         <div className="section right">
             {!connection? <p>Select user to chat</p> : <div className="connection">
                 <div className="conn">
-                    <p>Connection: {connection[0].id}</p> 
                     <p>{connection[0].user1===payload.username? connection[0].user2: connection[0].user1}</p>
-                    <p>Is Typing? {typing.toString()}</p>
+                    {!typing ? null :  <DotLottieReact src="images/typing.lottie" loop autoplay style={{width: "10em"}} /> }
                 </div>
                 
                 <div className="messagesArea">

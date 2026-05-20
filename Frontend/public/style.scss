@@ -5,7 +5,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'poppins';
-    p, h1 {
+    p, h1, h2 {
         margin: 0;
     }
     input, button {
@@ -63,12 +63,8 @@ body {
 .app {
     display: grid;
     grid-template-columns: 1fr 3fr;
-    gap: 2em;
-    background-color: #2c2c54;
     height: 100vh;
-    padding: 2em;
     box-sizing: border-box;
-    color: white;
     img {
         filter: invert(1);
         width: 2em;
@@ -76,63 +72,104 @@ body {
 
     .section {
         padding: 2em;
-        border-radius: 2em;
         box-sizing: border-box;
     }
     .left {
-        background-color: #40407a;
         display: flex;
         flex-direction: column;
-        gap: 1em;
-        .user {
-            background-color: #2c2c54;
+        gap: 2em;
+        border-radius: 0 1em 1em 0;
+        background-color: #1e272e;
+        color: white;
+
+        .entry {
             display: flex;
+            flex-direction: column;
             gap: 1em;
-            border-radius: 2em;
-            align-items: center;
-            padding: 1em;
-            .picture {
-                position: relative;
-                .status {
-                    position: absolute;
-                    right: 0;
-                    bottom: 0;
-                    width: 0.5em;
-                    height: 0.5em;
-                    border-radius: 50%;
-                    background-color: gray;
-                }
-                .online {
-                    background-color: rgb(0, 255, 0);
+            input {
+                border-radius: 0;
+            }
+        }
+
+        .users {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+            .user {
+                background-color: #485460;
+                display: flex;
+                gap: 1em;
+                border-radius: 1em;
+                align-items: center;
+                padding: 1em;
+                .picture {
+                    position: relative;
+                    .status {
+                        position: absolute;
+                        right: 0;
+                        bottom: 0;
+                        width: 0.5em;
+                        height: 0.5em;
+                        border-radius: 50%;
+                        background-color: gray;
+                    }
+                    .online {
+                        background-color: rgb(0, 255, 0);
+                    }
                 }
             }
         }
     }
     .right {
-        background-color: #40407a;
         .connection {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             height: 100%;
+            .conn {
+                display: flex;
+                align-items: center;
+                height: 4em;
+                .clear {
+                    margin-left: auto;
+                    cursor: pointer;
+                }
+            }
             .messagesArea {
-                height: 25em;
+                height: 30em;
                 overflow-y: auto;
-                border-radius: 2em;
-                border: 1px solid gray;
                 display: flex;
                 flex-direction: column-reverse;
                 gap: 1em;
+                padding: 1em;
+                box-sizing: border-box;
+                scrollbar-width: none;
+                color: white;
+                border: 1px solid lightgray;
+                border-radius: 10px;
                 .msg {
                     padding: 1em;
                     border-radius: 1em;
-                    background-color: gray;
+                    background-color: #374151;
                     width: fit-content;
                     align-self: start;
                 }
                 p.mine {
-                    background-color: green;
+                    background-color: #2563eb;
                     align-self: end;
+                }
+            }
+            form {
+                position: relative;
+                display: flex;
+                align-items: center;
+                input, button {
+                    height: 4em;
+                }
+                button {
+                    position: absolute;
+                    right: 0;
+                    width: fit-content;
                 }
             }
         }

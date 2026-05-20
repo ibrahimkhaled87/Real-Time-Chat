@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { socket } from "../sockets/socket";
+import { socket } from "../../sockets/socket";
 
 export default function useSocketListeners({setMessages, setUsers, setTyping}) {
     useEffect(() => {
@@ -36,6 +36,11 @@ export default function useSocketListeners({setMessages, setUsers, setTyping}) {
                 )
             );
         });
+
+        socket.on("clear_chat", () => {
+            console.log("Clear")
+            setMessages(null);
+        });
         
         
         // Listeners on must cleanup
@@ -45,6 +50,7 @@ export default function useSocketListeners({setMessages, setUsers, setTyping}) {
             socket.off("stop_typing");
             socket.off("online");
             socket.off("offline");
+            socket.off("clear_chat");
         }
     }, [setMessages, setUsers, setTyping])
 }

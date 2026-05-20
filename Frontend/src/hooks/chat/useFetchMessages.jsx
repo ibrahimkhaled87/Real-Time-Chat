@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { socket } from "../sockets/socket";
+import { socket } from "../../sockets/socket";
 
 export default function useFetchMessages(conn_id) {
     const [messages, setMessages] = useState(null);
