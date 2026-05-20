@@ -18,7 +18,8 @@ export default function Login() {
     }
     //Send to backend
     const navigate = useNavigate();
-    const login = async () => {
+    const login = async (e) => {
+        e.preventDefault();
         try {
             const response = await axios.post("/auth/login", credintials);
             alert("Login successful");

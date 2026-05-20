@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, routerProvider } from "react-router-dom";
 import Login from "./pages/Login";
 import App from "./pages/App";
+import Kanban from "./pages/Kanban";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicOnlyRoute from "./routes/PublicOnlyRoute";
 
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
         <ProtectedRoute>
             <App />
         </ProtectedRoute>
+    },
+    {
+        path: "/kanban",
+        element: <Kanban />
     },
 ]);
 
