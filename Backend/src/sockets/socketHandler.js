@@ -31,5 +31,15 @@ export default function socketHandler(io) {
         socket.on("stop_typing", (conn_id) => {
             socket.to(conn_id).emit("stop_typing");
         })
+
+        socket.on("dragging", ({dragging, position}) => {
+            console.log(socket.id, "dragging");
+            socket.broadcast.emit("dragging", ({dragging, position}));
+        })
+
+        socket.on("stop_dragging", (items) => {
+            console.log(socket.id, "stop_dragging");
+            socket.broadcast.emit("stop_dragging", items);
+        })
     })
 }

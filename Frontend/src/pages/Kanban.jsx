@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import { socket } from "../sockets/socket";
 
 export default function Kanban() {
     const [form, setForm] = useState({task: "", type: ""});
@@ -24,10 +25,8 @@ export default function Kanban() {
     ])
 
     const [dragging, setDragging] = useState(null);
-    useEffect(() => {
-        console.log(dragging);
-    }, [dragging])
 
+    // Mouse up + dragging = update items (target)
     const mouseUp = (e) => {
         e.stopPropagation();
         const target = e.currentTarget.className;
@@ -62,14 +61,13 @@ export default function Kanban() {
 
             setDragging(null);
         }
-
     }
 
     const globalMouseUp = () => {
         setDragging(null);
     }
 
-    //mouse position
+    //Mouse position
     const [position, setPosition] = useState({x: 0, y: 0});
     const mouseMove = (e) => {
         setPosition({
@@ -78,7 +76,47 @@ export default function Kanban() {
         })
     }
 
-    // const divRefs = useRef([]);
+    // Emit dragging event
+    const prevDragging = useRef(false);
+    useEffect(() => {
+        let interval;
+        if(dragging) {
+            interval = setInterval(() => {
+                socket.emit("dragging", {dragging, position})
+            }, 10);
+        }
+
+        else if (prevDragging.current && !dragging) {
+            socket.emit("stop_dragging", items);
+        }
+        prevDragging.current = dragging;
+
+        return () => {
+            clearInterval(interval);
+        }
+    }, [position, dragging])
+
+    // Listen for dragging
+    const [remoteDragging, setRemoteDragging] = useState(null);
+    useEffect(() => {
+        socket.on("dragging", ({dragging, position}) => {
+            console.log("dragging");
+            setRemoteDragging(dragging);
+            setPosition(position)
+        })
+        socket.on("stop_dragging", items => {
+            console.log("stop_dragging");
+            console.log(items);
+            setItems(items);
+            setRemoteDragging(null);
+        })
+
+        return () => {
+            socket.off("dragging");
+            socket.off("stop_dragging");
+        }
+    }, [])
+
 
     return <div className="kanban" onMouseUp={globalMouseUp} onMouseMove={mouseMove}>
         <h1>React Kanban Board</h1>
@@ -133,12 +171,12 @@ export default function Kanban() {
             </div>
         </div>
 
-        {!dragging ? null : <div className="dragged item" style={{
+        {!(dragging || remoteDragging) ? null : <div className="dragged item" style={{
             left: position.x,
             top: position.y,
             userSelect: "none",
         }}>
-            <p>{dragging.task}</p>
+            <p>{(dragging || remoteDragging).task}</p>
             <p>&times;</p>
         </div> }
     </div>
