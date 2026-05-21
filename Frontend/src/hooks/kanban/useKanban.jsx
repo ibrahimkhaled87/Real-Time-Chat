@@ -59,7 +59,7 @@ export default function useKanban() {
         setItems(updatedItems); //locally
 
         setDragging(null);
-        socket.emit("stop_dragging", items); //event
+        socket.emit("stop_dragging", updatedItems); //event
     
         await axios.patch("/kanban", {task: dragging.task, type: type}); //db
     }

@@ -46,5 +46,15 @@ export default function socketHandler(io) {
             console.log("update_kanban");
             socket.broadcast.emit("update_kanban", items);
         })
+
+        // Tic tac toe
+        socket.on("join_game", conn_id => {
+            socket.join(conn_id);
+        })
+
+        socket.on("cursor", ({conn_id, position}) => {
+            console.log(socket.id, "cursor");
+            socket.to(conn_id).emit("cursor", position);
+        })
     })
 }

@@ -6,6 +6,7 @@ import App from "./pages/App";
 import Kanban from "./pages/Kanban";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicOnlyRoute from "./routes/PublicOnlyRoute";
+import TicTacToe from "./pages/TicTacToe";
 
 const router = createBrowserRouter([
     {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
     {
         path: "/kanban",
         element: <Kanban />
+    },
+    {
+        path: "/tic-tac-toe",
+        element: <TicTacToe />
     },
 ]);
 

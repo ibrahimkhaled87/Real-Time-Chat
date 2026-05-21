@@ -262,4 +262,92 @@ body button:hover {
   width: 19em;
 }
 
+.ticTacToe {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 3em;
+  box-sizing: border-box;
+  align-items: center;
+  user-select: none;
+}
+.ticTacToe .users {
+  display: flex;
+  flex-direction: row;
+  padding: 0.5em;
+  border-radius: 1em;
+  background-color: lightgray;
+  width: 50%;
+  box-sizing: border-box;
+}
+.ticTacToe .users .user {
+  border-radius: 0.5em;
+  padding: 0.5em;
+  width: fit-content;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.ticTacToe .users .user img {
+  width: 2em;
+}
+.ticTacToe .users .user:hover {
+  background-color: rgba(12, 79, 124, 0.3529411765);
+}
+.ticTacToe .area {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ticTacToe .area .game {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.ticTacToe .area .game .user {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+  border-radius: 1em;
+  background-color: #feb47b;
+}
+.ticTacToe .area .game .board {
+  display: grid;
+  grid-template-columns: repeat(3, 7em);
+  grid-template-rows: repeat(3, 7em);
+  gap: 0.2em;
+}
+.ticTacToe .area .game .board .cell {
+  width: 100%;
+  height: 100%;
+  background-color: lightgray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 5em;
+  font-weight: 500;
+}
+.ticTacToe .remoteCursor {
+  position: fixed;
+  background-color: #0c4f7c;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: transform 0.05s linear;
+  will-change: transform;
+}
+
 /*# sourceMappingURL=style.css.map */
