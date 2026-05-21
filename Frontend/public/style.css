@@ -300,6 +300,8 @@ body button:hover {
   width: 70%;
   height: 100%;
   display: flex;
+  flex-direction: column;
+  gap: 2em;
   justify-content: center;
   align-items: center;
 }
@@ -319,6 +321,14 @@ body button:hover {
   border-radius: 1em;
   background-color: #feb47b;
 }
+.ticTacToe .area .game .user .status {
+  padding: 0.5em;
+  background-color: gray;
+  border-radius: 1em;
+}
+.ticTacToe .area .game .user .available {
+  background-color: lightgreen;
+}
 .ticTacToe .area .game .board {
   display: grid;
   grid-template-columns: repeat(3, 7em);
@@ -337,6 +347,8 @@ body button:hover {
 }
 .ticTacToe .remoteCursor {
   position: fixed;
+  top: 0;
+  left: 0;
   background-color: #0c4f7c;
   color: white;
   display: flex;

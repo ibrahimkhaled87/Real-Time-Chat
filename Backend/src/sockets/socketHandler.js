@@ -49,12 +49,19 @@ export default function socketHandler(io) {
 
         // Tic tac toe
         socket.on("join_game", conn_id => {
+            console.log("join game");
             socket.join(conn_id);
+            socket.to(conn_id).emit("join_game");
         })
 
         socket.on("cursor", ({conn_id, position}) => {
             console.log(socket.id, "cursor");
             socket.to(conn_id).emit("cursor", position);
+        })
+
+        socket.on("board_update", ({conn_id, i, value}) => {
+            console.log(socket.id, i, value);
+            socket.to(conn_id).emit("board_update", ({i, value}));
         })
     })
 }

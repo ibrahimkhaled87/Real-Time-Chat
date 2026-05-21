@@ -312,6 +312,8 @@ body {
         width: 70%;
         height: 100%;
         display: flex;
+        flex-direction: column;
+        gap: 2em;
         justify-content: center;
         align-items: center;
 
@@ -329,6 +331,14 @@ body {
                 padding: 1em;
                 border-radius: 1em;
                 background-color: #feb47b;
+                .status {
+                    padding: 0.5em;
+                    background-color: gray;
+                    border-radius: 1em;
+                }
+                .available {
+                    background-color: lightgreen;
+                }
             }
 
             .board {
@@ -352,6 +362,8 @@ body {
 
     .remoteCursor {
         position: fixed;
+        top: 0;
+        left: 0;
         background-color: #0c4f7c;
         color: white;
         display: flex;

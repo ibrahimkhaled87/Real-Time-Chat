@@ -1,81 +1,9 @@
-import useFetchUsers from "../hooks/chat/useFetchUsers";
-import useFetchConnection from "../hooks/chat/useFetchConnection";
-import useTokenDecode from "../hooks/useTokenDecode";
-import { useEffect, useState, useRef } from "react";
-import { socket } from "../sockets/socket";
+import useTicTacToe from "../hooks/tic-tac-toe/useTicTacToe";
 
 export default function TicTacToe() {
-    const {payload} = useTokenDecode();
+    const {users, connection, available, myChar, payload, joined, board, win, handleClick, getConnection} = useTicTacToe();
 
-    const {users, setUsers} = useFetchUsers(payload?.username);
-    const {connection, setConnection, getConnection} = useFetchConnection(payload?.username);
-
-    const [turn, setTurn] = useState("X");
-    const [board, setBoard] = useState([
-        "", "", "",
-        "", "", "",
-        "", "", ""
-    ])
-    
-    const handleClick = (i) => {
-        if(board[i]==="") {
-            setBoard(prev => (
-                prev.map((item, idx) => (
-                    idx===i
-                    ? turn
-                    : item
-                ))
-            ))
-
-            if(turn==="X")
-                setTurn("O")
-            else 
-                setTurn("X")
-        }
-    }
-
-    // ======= Socket ========
-
-    // Listen remote cursor
-    const [remotePosition, setRemotePosition] = useState(null);
-    useEffect(() => {
-        socket.on("cursor", position => {
-            setRemotePosition(position);
-        });
-
-        return () => socket.off("cursor");
-    }, []);
-
-
-    // Emit join
-    useEffect(() => {
-        if(!connection) return;
-
-        socket.emit("join_game", connection[0].id)
-    }, [connection])
-
-
-    // Emit cursor
-    const frame = useRef(null);
-    const mouseMove = (e) => {
-        if (!connection) return;
-
-        const x = e.clientX;
-        const y = e.clientY;
-        
-        if (frame.current) return;
-
-        frame.current = requestAnimationFrame(() => {
-            socket.emit("cursor", {
-                conn_id: connection[0].id,
-                position: { x, y }
-            });
-            frame.current = null;
-        });
-    };
-
-
-    return <div className="ticTacToe" onMouseMove={mouseMove}>
+    return <div className="ticTacToe">
         <div className="users">
             {!users? <p>Loading...</p> : users.map(user => (
                 <div className="user" onClick={() => getConnection(user.username)}>
@@ -86,35 +14,29 @@ export default function TicTacToe() {
         </div>
 
         <div className="area">
+            {!win? null : <h2>{`${win} Wins`}</h2> }
+
             {!connection? <p>Choose user to start game</p> : <div className="game">
-                <div className="user other_user">
+                <div className="user other_user" style={
+                    !myChar? null : !available? {border: "3px solid green"} : null
+                }>
                     {connection[0].user1===payload.username? connection[0].user2 : connection[0].user1}
-                    <p className="status">Offline</p>
-                    <p>O</p>
+                    <p className={`status ${joined}`}>{joined.charAt(0).toUpperCase() + joined.slice(1)}</p>
+                    <p>{myChar==="X"? "O" : myChar==="O"? "X" : null}</p>
                 </div>
                 <div className="board">
                     {board.map((item, i) => <div className={`cell ${i}`} onClick={() => handleClick(i)}>
                         {item}
                     </div> )}
                 </div>
-                <div className="user me">
+                <div className="user me" style={
+                    !myChar? null : available? {border: "3px solid green"} : null
+                }>
                     {payload.username}
-                    <p className="status">Available</p>
-                    <p>X</p>
+                    <p>{myChar}</p>
                 </div>
             </div> }
         </div>
-
-        {!remotePosition? null : <div className="remoteCursor" style={{
-            top: remotePosition.y,
-            left: remotePosition.x
-        }}>
-        {    
-            connection?.[0]?.user1 === payload.username
-            ? connection?.[0]?.user2
-            : connection?.[0]?.user1
-        }
-        </div> }
-
+        
     </div>
 }

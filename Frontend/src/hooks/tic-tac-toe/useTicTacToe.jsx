@@ -1,0 +1,130 @@
+import { useEffect, useState } from "react";
+import useTokenDecode from "../useTokenDecode";
+import useFetchUsers from "../chat/useFetchUsers";
+import useFetchConnection from "../chat/useFetchConnection";
+import { socket } from "../../sockets/socket";
+
+export default function useTicTacToe() {
+    const {payload} = useTokenDecode();
+
+    const {users} = useFetchUsers(payload?.username);
+    const {connection, getConnection} = useFetchConnection(payload?.username);
+
+    // ==== Board ====
+
+    const [available, setAvailable] = useState(true);
+    const [turn, setTurn] = useState("X");
+    const [board, setBoard] = useState([
+        "", "", "",
+        "", "", "",
+        "", "", ""
+    ])
+    
+    const handleClick = (i) => {
+        if(!available) return;
+
+        if(board[i]==="") {
+            setBoard(prev => ( //locally
+                prev.map((item, idx) => (
+                    idx===i
+                    ? turn
+                    : item
+                ))
+            ))
+            setTurn(prev => prev === "X" ? "O" : "X");
+            setAvailable(false);
+
+            socket.emit("board_update", {conn_id: connection[0].id, i:i, value: turn}) //event
+        }
+    }
+
+    // ==== Check win =====
+
+    const [win, setWin] = useState(false);
+    useEffect(() => {
+        if(win)
+            setAvailable(false);
+    }, [win])
+
+    const wins = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+
+        [0, 4, 8],
+        [2, 4, 6]
+    ]
+    useEffect(() => {
+        for(const [a, b, c] of wins) {
+            if(
+                board[a] &&
+                board[a] === board[b] &&
+                board[b] === board[c]
+            ) {
+                console.log(`${board[a]} WINNNN`)
+                setWin(board[a]);
+            }
+        }
+    }, [board])
+
+
+    // ==== Check my char ====
+    
+    const [myChar, setMyChar] = useState(null);
+    useEffect(() => {
+        if(myChar) return;
+
+        for(let i=0; i<9; i++)
+            if(board[i]!=="") {
+                if(available) setMyChar(turn);
+                else setMyChar(turn==="X"? "O": "X");
+                break;
+            }
+    }, [board])
+
+
+    // ======= Socket ========
+
+    // Emit join
+    useEffect(() => {
+        if(!connection) return;
+
+        socket.emit("join_game", connection[0].id)
+    }, [connection])
+
+
+    // Listeners
+    const [joined, setJoined] = useState("offline");
+    useEffect(() => {
+        socket.on("join_game", () => {
+            setJoined("available");
+        })
+
+        socket.on("board_update", ({i, value}) => {
+            console.log(i, value);
+            setBoard(prev => (
+                prev.map((item, idx) => (
+                    idx===i
+                    ? value
+                    : item
+                ))
+            ))
+
+            setTurn(prev => prev === "X" ? "O" : "X");
+
+            setAvailable(true);
+        })
+
+        return () => {
+            socket.off("join_game");
+            socket.off("board_update");
+        }
+    }, [])
+
+
+    return {users, connection, available, myChar, payload, joined, board, win, handleClick, getConnection};
+}
