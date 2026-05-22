@@ -1,6 +1,8 @@
+import { useRef, useEffect, useState } from "react";
 import useTokenDecode from "../hooks/useTokenDecode";
 import useChat from "../hooks/chat/useChat";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import axios from "axios";
 
 export default function App() {
     const {payload} = useTokenDecode();
@@ -17,6 +19,53 @@ export default function App() {
         setConnection,
         logout,
     } = useChat(payload?.username);
+
+    //obesrve unseen messages + sent by other
+    const observerRef = useRef(null);
+    const messageRefs = useRef(new Map());
+    const processingRef = useRef(new Set());
+
+    const unseenMessages = messages?.filter(
+        (msg) =>
+            msg.sender !== payload?.username &&
+            msg.status !== "seen"
+    );
+
+    useEffect(() => {
+        if (!unseenMessages?.length) return;
+
+        observerRef.current?.disconnect();
+
+        observerRef.current = new IntersectionObserver((entries) => {
+            entries.forEach(async (entry) => {
+                if (!entry.isIntersecting) return;
+
+                const messageId = entry.target.getAttribute("data-id");
+
+                if (processingRef.current.has(messageId)) return;
+                
+                processingRef.current.add(messageId);
+
+                await axios.patch("/messages/seen", { id: messageId });
+
+                observerRef.current?.unobserve(entry.target);
+            });
+        });
+
+        unseenMessages.forEach((msg) => {
+            const el = messageRefs.current.get(msg.id);
+
+            if (el) {
+                observerRef.current.observe(el);
+            }
+        });
+
+        return () => {
+            observerRef.current?.disconnect();
+        };
+    }, [unseenMessages]);
+
+
 
     if(!payload) return <p>Loading...</p>
 
@@ -49,9 +98,23 @@ export default function App() {
                 </div>
                 
                 <div className="messagesArea">
-                    {!messages? null : messages.map(message => (
-                        <p className={`msg ${message.sender===payload.username? "mine" : ""}`} >{message.message}</p>
-                    )) }
+                    {messages?.map((message) => (
+                        <div
+                            key={message.id}
+                            ref={(el) => {
+                                if (el) {
+                                    messageRefs.current.set(message.id, el);
+                                }
+                            }}
+                            data-id={message.id}
+                            className={`msg ${message.sender===payload.username ? "mine" : ""}`}
+                        >
+                            <p>{message.message}</p>
+                            <p className="smaller">{new Date(message.sent_at).toLocaleTimeString()}</p>
+                            <p className="smaller">{message.id}</p>
+                            <p className="smaller">{message.status}</p>
+                        </div>
+                    ))}
                 </div>
 
                 <form onSubmit={sendMessage}>

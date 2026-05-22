@@ -5,6 +5,7 @@ export default function useSocketListeners({setMessages, setUsers, setTyping}) {
     useEffect(() => {
         //Conn_id
         socket.on("new_message", message => {
+            console.log(message);
             setMessages(prev => [message, ...(prev || [])]);
         });
 
@@ -14,6 +15,17 @@ export default function useSocketListeners({setMessages, setUsers, setTyping}) {
 
         socket.on("stop_typing", () => {
             setTyping(false);
+        });
+
+        socket.on("message_seen", (id) => {
+            console.log("message_seen", id)
+            setMessages(prev =>
+                prev.map(message => (
+                    message.id == id
+                        ? { ...message, status: "seen" }
+                        : message
+                ))
+            );
         });
 
         //Broadcast

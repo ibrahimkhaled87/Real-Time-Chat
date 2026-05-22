@@ -19,7 +19,6 @@ export default function useChat(current) {
         e.preventDefault()
 
         await axios.post("/messages", {conn_id: connection[0].id, message, sender: current});
-        socket.emit("new_message", {conn_id: connection[0].id, message, sender: current});
         setMessage("");
     };
 

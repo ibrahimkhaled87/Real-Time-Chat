@@ -156,8 +156,14 @@ body {
                     background-color: #374151;
                     width: fit-content;
                     align-self: start;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.2em;
+                    .smaller {
+                        font-size: 0.5em;
+                    }
                 }
-                p.mine {
+                .mine {
                     background-color: #2563eb;
                     align-self: end;
                 }

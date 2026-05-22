@@ -9,6 +9,7 @@ const io = new Server(server, {     //Create socket.io server => attach to http 
     cors: ""
 })
 socketHandler(io); //Pass socket.io instance to logic 
+app.set("io", io); //To use socket in controller
 
 server.listen(port, () => {
     console.log(`Server running on port ${port}`)

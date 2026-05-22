@@ -50,10 +50,6 @@ export default function socketHandler(io) {
             socket.join(conn_id);
         })
         
-        socket.on("new_message", message => {
-            io.to(message.conn_id).emit("new_message", message);
-        })
-        
         socket.on("typing", (conn_id) => {
             socket.to(conn_id).emit("typing");
         })
