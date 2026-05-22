@@ -2,11 +2,13 @@ import React from "react";
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, routerProvider } from "react-router-dom";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import App from "./pages/App";
 import Kanban from "./pages/Kanban";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicOnlyRoute from "./routes/PublicOnlyRoute";
 import TicTacToe from "./pages/TicTacToe";
+import Whiteboard from "./pages/Whiteboard";
 
 const router = createBrowserRouter([
     {
@@ -14,6 +16,13 @@ const router = createBrowserRouter([
         element: 
         <PublicOnlyRoute>
             <Login />
+        </PublicOnlyRoute>
+    },
+    {
+        path: "/signup",
+        element: 
+        <PublicOnlyRoute>
+            <Signup />
         </PublicOnlyRoute>
     },
     {
@@ -25,11 +34,24 @@ const router = createBrowserRouter([
     },
     {
         path: "/kanban",
-        element: <Kanban />
+        element: 
+        <ProtectedRoute>
+            <Kanban />
+        </ProtectedRoute>
     },
     {
         path: "/tic-tac-toe",
-        element: <TicTacToe />
+        element: 
+        <ProtectedRoute>
+            <TicTacToe />
+        </ProtectedRoute>
+    },
+    {
+        path: "/whiteboard",
+        element: 
+        <ProtectedRoute>
+            <Whiteboard />
+        </ProtectedRoute>
     },
 ]);
 

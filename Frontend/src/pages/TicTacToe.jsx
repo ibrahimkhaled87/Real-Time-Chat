@@ -1,7 +1,7 @@
 import useTicTacToe from "../hooks/tic-tac-toe/useTicTacToe";
 
 export default function TicTacToe() {
-    const {users, connection, available, myChar, payload, joined, board, win, handleClick, getConnection} = useTicTacToe();
+    const {users, connection, available, myChar, payload, joined, board, win, handleClick, getConnection, mePlay, otherPlay, otherUser, otherUserChar} = useTicTacToe();
 
     return <div className="ticTacToe">
         <div className="users">
@@ -17,21 +17,19 @@ export default function TicTacToe() {
             {!win? null : <h2>{`${win} Wins`}</h2> }
 
             {!connection? <p>Choose user to start game</p> : <div className="game">
-                <div className="user other_user" style={
-                    !myChar? null : !available? {border: "3px solid green"} : null
-                }>
-                    {connection[0].user1===payload.username? connection[0].user2 : connection[0].user1}
-                    <p className={`status ${joined}`}>{joined.charAt(0).toUpperCase() + joined.slice(1)}</p>
-                    <p>{myChar==="X"? "O" : myChar==="O"? "X" : null}</p>
+                <div className="user other_user" style={otherPlay ? {border: "3px solid green"} : null}>
+                    {otherUser}
+                    <p className={`status ${joined}`}>{joined}</p>
+                    <p>{otherUserChar}</p>
                 </div>
+
                 <div className="board">
-                    {board.map((item, i) => <div className={`cell ${i}`} onClick={() => handleClick(i)}>
+                    {board.map((item, i) => <div className="cell" onClick={() => handleClick(i)}>
                         {item}
                     </div> )}
                 </div>
-                <div className="user me" style={
-                    !myChar? null : available? {border: "3px solid green"} : null
-                }>
+                
+                <div className="user me" style={mePlay? {border: "3px solid green"} : null}>
                     {payload.username}
                     <p>{myChar}</p>
                 </div>

@@ -38,7 +38,7 @@ export default function useChat(current) {
     const navigate = useNavigate();
     const logout = () => {
         localStorage.removeItem("token");
-        socket.emit("offline", current);
+        socket.disconnect();
         navigate("/");
     }
 

@@ -24,34 +24,37 @@ body button:hover {
   background-color: #2980b9;
 }
 
-.login {
+.login, .signup {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   height: 100vh;
 }
-.login .section {
+.login .section, .signup .section {
   padding: 6em;
 }
-.login .left {
+.login .left, .signup .left {
   background-color: violet;
 }
-.login .right {
+.login .right, .signup .right {
   display: flex;
   flex-direction: column;
   gap: 2em;
   justify-content: center;
 }
-.login .right form {
+.login .right form, .signup .right form {
   display: flex;
   flex-direction: column;
   gap: 1em;
 }
-.login .right .toggle {
+.login .right form button, .signup .right form button {
+  margin-top: 1em;
+}
+.login .right .toggle, .signup .right .toggle {
   display: flex;
   gap: 1em;
   justify-content: center;
 }
-.login .right .toggle .action {
+.login .right .toggle .action, .signup .right .toggle .action {
   color: orange;
   cursor: pointer;
   text-decoration: underline;
@@ -360,6 +363,44 @@ body button:hover {
   pointer-events: none;
   transition: transform 0.05s linear;
   will-change: transform;
+}
+
+.whiteboard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
+  height: 100vh;
+}
+.whiteboard .toolset {
+  position: fixed;
+  top: calc(50% - 9em);
+  left: 5%;
+  background-color: lightgray;
+  border-radius: 2em;
+  width: 4em;
+  height: 20em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 0.5em;
+  box-sizing: border-box;
+}
+.whiteboard .toolset .color {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.whiteboard .toolset .green {
+  background-color: green;
+}
+.whiteboard .toolset .red {
+  background-color: red;
+}
+.whiteboard .toolset .blue {
+  background-color: blue;
 }
 
 /*# sourceMappingURL=style.css.map */

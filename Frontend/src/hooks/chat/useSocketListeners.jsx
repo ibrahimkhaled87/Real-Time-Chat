@@ -17,24 +17,15 @@ export default function useSocketListeners({setMessages, setUsers, setTyping}) {
         });
 
         //Broadcast
-        socket.on("online", username => {
+        socket.on("online_users", (usernames) => {
+            console.log(usernames);
             setUsers(prev =>
                 prev.map(user =>
-                    user.username === username
+                    usernames.includes(user.username)
                         ? { ...user, status: "online" }
-                        : user
+                        : { ...user, status: "offline" }
                 )
-            );
-        });
-
-        socket.on("offline", username => {
-            setUsers(prev =>
-                prev.map(user =>
-                    user.username === username
-                        ? { ...user, status: "offline" }
-                        : user
-                )
-            );
+            )
         });
 
         socket.on("clear_chat", () => {

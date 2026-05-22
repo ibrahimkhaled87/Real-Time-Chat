@@ -126,5 +126,23 @@ export default function useTicTacToe() {
     }, [])
 
 
-    return {users, connection, available, myChar, payload, joined, board, win, handleClick, getConnection};
+    // ==== Jsx calculations =====
+    const mePlay = (myChar && available);
+    const otherPlay = (myChar && !available);
+
+    const otherUser = connection
+        ? connection[0].user1 === payload.username
+            ? connection[0].user2
+            : connection[0].user1
+        : null;
+
+    const otherUserChar =
+        myChar === "X"
+            ? "O"
+            : myChar === "O"
+            ? "X"
+            : null;
+
+
+    return {users, connection, available, myChar, payload, joined, board, win, handleClick, getConnection, mePlay, otherPlay, otherUser, otherUserChar};
 }

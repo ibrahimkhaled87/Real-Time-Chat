@@ -2,11 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import axios from "axios";
-import { socket } from "../sockets/socket";
 
 export default function Login() {
-    const [form, setForm] = useState("login");
-
     //Read credintials
     const [credintials, setCredintials] = useState({username: "", password: ""});
     const handleChange = (e) => {
@@ -24,7 +21,6 @@ export default function Login() {
             const response = await axios.post("/auth/login", credintials);
             alert("Login successful");
             localStorage.setItem("token", response.data);
-            socket.emit("online", credintials.username);
             navigate("/app");
         } catch (error) {
             console.log(error);
@@ -46,11 +42,11 @@ export default function Login() {
 
             <form onSubmit={login}>
                 <input type="text" name="username" placeholder="Enter username" onChange={handleChange} />    
-                <input type="text" name="password" placeholder="Enter password" onChange={handleChange} /> 
+                <input type="password" name="password" placeholder="Enter password" onChange={handleChange} /> 
                 <button type="submit">Login</button>  
                 <div className="toggle">
                     <p>Don't have an account?</p> 
-                    <p className="action" onClick={() => setForm("signup")} >Signup</p>
+                    <p className="action" onClick={() => navigate("/signup")}>Signup</p>
                 </div>
             </form>
         </div>

@@ -27,7 +27,7 @@ body {
 }
 
 //pages
-.login {
+.login, .signup {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     height: 100vh;
@@ -46,6 +46,9 @@ body {
             display: flex;
             flex-direction: column;
             gap: 1em;
+            button {
+                margin-top: 1em;
+            }
         }
         .toggle {
             display: flex;
@@ -376,5 +379,45 @@ body {
         pointer-events: none;
         transition: transform 0.05s linear;
         will-change: transform; 
+    }
+}
+
+.whiteboard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2em;
+    height: 100vh;
+
+    .toolset {
+        position: fixed;
+        top: calc(50% - 9em);
+        left: 5%;
+        background-color: lightgray;
+        border-radius: 2em;
+        width: 4em;
+        height: 20em;
+
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        padding: 0.5em;
+        box-sizing: border-box;
+        .color {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .green {
+            background-color: green;
+        }
+        .red {
+            background-color: red;
+        }
+        .blue {
+            background-color: blue;
+        }
     }
 }

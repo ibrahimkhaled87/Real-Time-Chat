@@ -18,7 +18,6 @@ export default function App() {
         logout,
     } = useChat(payload?.username);
 
-
     if(!payload) return <p>Loading...</p>
 
     return <div className="app">
