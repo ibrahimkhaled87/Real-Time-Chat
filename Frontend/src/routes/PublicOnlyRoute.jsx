@@ -3,5 +3,5 @@ import { Navigate } from "react-router-dom";
 export default function PublicOnlyRoute({children}) {
     const token = localStorage.getItem("token");
 
-    return (!token) ? children : <Navigate to="/app" replace />
+    return (!token) ? children : <Navigate to="/" replace />
 }

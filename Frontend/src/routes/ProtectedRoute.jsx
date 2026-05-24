@@ -14,5 +14,5 @@ export default function ProtectedRoute({children}) {
         return () => socket.disconnect();
     }, [token]);
 
-    return token ? children : <Navigate to="/" replace />;
+    return token ? children : <Navigate to="/login" replace />;
 }

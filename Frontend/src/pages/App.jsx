@@ -33,28 +33,21 @@ export default function App() {
 
     useEffect(() => {
         if (!unseenMessages?.length) return;
-
         observerRef.current?.disconnect();
 
         observerRef.current = new IntersectionObserver((entries) => {
             entries.forEach(async (entry) => {
                 if (!entry.isIntersecting) return;
-
-                const messageId = entry.target.getAttribute("data-id");
-
+                const messageId = entry.target.getAttribute("data-id"); //Get id from el for db
                 if (processingRef.current.has(messageId)) return;
-                
                 processingRef.current.add(messageId);
-
                 await axios.patch("/messages/seen", { id: messageId });
-
                 observerRef.current?.unobserve(entry.target);
             });
         });
 
         unseenMessages.forEach((msg) => {
-            const el = messageRefs.current.get(msg.id);
-
+            const el = messageRefs.current.get(msg.id); //Get el from id to observe
             if (el) {
                 observerRef.current.observe(el);
             }
@@ -81,14 +74,12 @@ export default function App() {
                     <div className="user" onClick={(e) => {e.stopPropagation(); getConnection(user.username)}}>
                         <div className="picture">
                             <img src="/images/profile.svg" alt="" />
-                            <div className={`status ${user.status==="online"? "online" : ""}`} ></div>
+                            <div className={`status ${user.status}`} ></div>
                         </div>
-                        <p>{user.username}</p>
+                        <p>{user.full_name}</p>
                     </div>
                 )) }
             </div>
-
-            <p onClick={logout} >Logout</p>
         </div>
         <div className="section right">
             {!connection? <p>Select user to chat</p> : <div className="connection">
@@ -111,8 +102,15 @@ export default function App() {
                         >
                             <p>{message.message}</p>
                             <p className="smaller">{new Date(message.sent_at).toLocaleTimeString()}</p>
-                            <p className="smaller">{message.id}</p>
-                            <p className="smaller">{message.status}</p>
+                            {message.sender!==payload.username? null :
+                                <p className="smaller" style={{
+                                    fontSize: "0.6em",
+                                    alignSelf:"end",
+                                    color: message.status==="seen"? "skyblue": "gray"
+                                }}>
+                                    &#10004;&#10004;
+                                </p>
+                            }
                         </div>
                     ))}
                 </div>

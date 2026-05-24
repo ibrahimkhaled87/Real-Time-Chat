@@ -33,13 +33,6 @@ export default function useChat(current) {
             socket.emit("stop_typing", connection[0].id);
     }, [message, connection])
 
-    //Logout
-    const navigate = useNavigate();
-    const logout = () => {
-        localStorage.removeItem("token");
-        socket.disconnect();
-        navigate("/");
-    }
 
     useSocketListeners({ setMessages, setUsers, setTyping });
 
@@ -53,6 +46,5 @@ export default function useChat(current) {
         connection,
         getConnection,
         setConnection,
-        logout,
     };
 }

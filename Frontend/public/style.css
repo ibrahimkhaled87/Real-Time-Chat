@@ -7,7 +7,7 @@ body {
 body p, body h1, body h2 {
   margin: 0;
 }
-body input, body button {
+body input, body button, body select {
   width: 100%;
   padding: 1em;
   border-radius: 1em;
@@ -67,7 +67,6 @@ body button:hover {
   box-sizing: border-box;
 }
 .app img {
-  filter: invert(1);
   width: 2em;
 }
 .app .section {
@@ -78,17 +77,12 @@ body button:hover {
   display: flex;
   flex-direction: column;
   gap: 2em;
-  border-radius: 0 1em 1em 0;
-  background-color: #1e272e;
-  color: white;
+  background-color: lightgray;
 }
 .app .left .entry {
   display: flex;
   flex-direction: column;
   gap: 1em;
-}
-.app .left .entry input {
-  border-radius: 0;
 }
 .app .left .users {
   display: flex;
@@ -96,7 +90,7 @@ body button:hover {
   gap: 1em;
 }
 .app .left .users .user {
-  background-color: #485460;
+  background-color: rgba(55, 65, 81, 0.3960784314);
   display: flex;
   gap: 1em;
   border-radius: 1em;
@@ -407,6 +401,217 @@ body button:hover {
 }
 .whiteboard .toolset .blue {
   background-color: blue;
+}
+
+.appLayout {
+  display: grid;
+  grid-template-columns: 5em auto;
+  height: 100vh;
+}
+.appLayout .main-nav {
+  background-color: #001525;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  align-items: center;
+  padding: 2em 0;
+  gap: 2em;
+}
+.appLayout .main-nav h1 {
+  cursor: pointer;
+  font-size: smaller;
+}
+.appLayout .main-nav ul {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.appLayout .main-nav ul li {
+  cursor: pointer;
+  width: 3em;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  background-color: lightgray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.3em;
+  box-sizing: border-box;
+}
+.appLayout .main-nav ul li:hover {
+  background-color: rgb(237, 228, 213);
+}
+.appLayout .main-nav .user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: auto;
+  gap: 2em;
+}
+.appLayout .main-nav .user img {
+  cursor: pointer;
+  width: 2em;
+  filter: invert(1);
+  margin-top: auto;
+}
+.appLayout .main-nav .user img.notification {
+  width: 3em;
+}
+.appLayout .main-nav .user .notifications .bell {
+  cursor: pointer;
+  position: relative;
+}
+.appLayout .main-nav .user .notifications .bell .count {
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: red;
+  color: white;
+  right: 0;
+  top: 0;
+}
+.appLayout .main-nav .user .notifications {
+  position: relative;
+}
+.appLayout .main-nav .user .notifications .content {
+  position: absolute;
+  left: 2em;
+  bottom: 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 20em;
+  background-color: gray;
+  z-index: -1;
+  opacity: 0;
+  transform: opacity 1s ease;
+}
+.appLayout .main-nav .user .notifications .content div.notification .actions {
+  display: flex;
+  gap: 0.5em;
+}
+.appLayout .main-nav .user .notifications .content div.notification .actions button {
+  background-color: red;
+}
+.appLayout .main-nav .user .notifications .content div.notification .actions button.accept {
+  background-color: green;
+}
+.appLayout .main-nav .user .notifications .show {
+  z-index: 1;
+  opacity: 1;
+}
+
+.team {
+  display: grid;
+  grid-template-columns: 20% 80%;
+}
+.team .left {
+  background-color: lightgray;
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  box-sizing: border-box;
+  gap: 1em;
+}
+.team .left .join {
+  background-color: blueviolet;
+}
+.team .left ul {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.team .left ul li {
+  cursor: pointer;
+  width: 100%;
+  padding: 0.5em;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(128, 128, 128, 0.427);
+  border-radius: 10px;
+}
+.team .right {
+  padding: 1em;
+  box-sizing: border-box;
+}
+
+.teamChat .messages {
+  height: 35em;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.5em;
+}
+.teamChat .messages .message {
+  width: fit-content;
+}
+.teamChat .messages .message .bubble {
+  background-color: #374151;
+  border-radius: 1em;
+  color: white;
+  padding: 0.5em;
+}
+.teamChat .messages .message.mine {
+  align-self: end;
+}
+.teamChat .messages .message.mine .bubble {
+  background-color: #0c4f7c;
+}
+
+.teamBoards .cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto;
+  gap: 1em;
+  margin-top: 1em;
+}
+.teamBoards .cards .card {
+  cursor: pointer;
+  background-color: rgba(52, 152, 219, 0.4862745098);
+  border-radius: 1em;
+  width: 100%;
+  height: 18em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.teamBoards .cards .card p {
+  font-size: 3em;
+}
+.teamBoards .cards .boardCard {
+  cursor: pointer;
+  background-color: rgba(52, 152, 219, 0.4862745098);
+  border-radius: 1em;
+  width: 100%;
+  height: 18em;
+  display: grid;
+  grid-template-rows: 70% 30%;
+}
+.teamBoards .cards .boardCard img {
+  width: 100%;
+  height: 100%;
+  border-radius: 1em 1em 0 0;
+}
+.teamBoards .cards .boardCard .info {
+  background-color: wheat;
+  height: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  padding: 1em;
+  box-sizing: border-box;
+  border-radius: 0 0 1em 1em;
 }
 
 /*# sourceMappingURL=style.css.map */

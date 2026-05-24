@@ -1,3 +1,4 @@
+import db from "../config/db.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
@@ -29,6 +30,9 @@ export default function socketHandler(io) {
         }
         onlineUsers.get(username).add(socket.id);
         io.emit("online_users", [...onlineUsers.keys()]);
+
+        //Join user room
+        socket.join(`user:${username}`);
 
         socket.on("disconnect", () => {
             console.log("Disconnected", username);
@@ -106,6 +110,30 @@ export default function socketHandler(io) {
 
         socket.on("color", (color) => {
             socket.broadcast.emit("color", color);
+        })
+
+
+        //Team
+        socket.on("join_team", team => {
+            console.log("join team");
+            socket.join(`team:${team}`);
+        })
+
+        socket.on("request_team_join", async ({user, team}) => {
+            console.log("request team join", user, team);
+            //Get owner
+            const data = await db.query("SELECT owner FROM workspaces WHERE id=$1", [team]);
+            const owner = data.rows[0].owner;
+
+            //Notify owner
+            const notification = await db.query("INSERT INTO user_notifications(username, notification) VALUES($1, $2) RETURNING *",
+                [owner, `User ${user} Requests to joing team ${team}`]
+            )
+            socket.to(`user:${data.rows[0].owner}`).emit("notification", notification.rows[0]);
+        })
+
+        socket.on("update_team_kanban", ({updatedItems, team}) => {
+            socket.to(`team:${team}`).emit("update_team_kanban", updatedItems);
         })
     })
 }
