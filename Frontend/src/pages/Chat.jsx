@@ -1,10 +1,10 @@
-import { useRef, useEffect, useState } from "react";
 import useTokenDecode from "../hooks/useTokenDecode";
-import useChat from "../hooks/chat/useChat";
+import useChat from "../hooks/components/useChat";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { useState } from "react";
 import axios from "axios";
 
-export default function App() {
+export default function Chat() {
     const {payload} = useTokenDecode();
 
     const {
@@ -17,56 +17,29 @@ export default function App() {
         connection,
         getConnection,
         setConnection,
-        logout,
+        messageRefs
     } = useChat(payload?.username);
 
-    //obesrve unseen messages + sent by other
-    const observerRef = useRef(null);
-    const messageRefs = useRef(new Map());
-    const processingRef = useRef(new Set());
+    //Add connection
+    const [newContact, setNewContact] = useState("");
+    const addContact = async (e) => {
+        e.preventDefault();
+        setNewContact("");
 
-    const unseenMessages = messages?.filter(
-        (msg) =>
-            msg.sender !== payload?.username &&
-            msg.status !== "seen"
-    );
-
-    useEffect(() => {
-        if (!unseenMessages?.length) return;
-        observerRef.current?.disconnect();
-
-        observerRef.current = new IntersectionObserver((entries) => {
-            entries.forEach(async (entry) => {
-                if (!entry.isIntersecting) return;
-                const messageId = entry.target.getAttribute("data-id"); //Get id from el for db
-                if (processingRef.current.has(messageId)) return;
-                processingRef.current.add(messageId);
-                await axios.patch("/messages/seen", { id: messageId });
-                observerRef.current?.unobserve(entry.target);
-            });
-        });
-
-        unseenMessages.forEach((msg) => {
-            const el = messageRefs.current.get(msg.id); //Get el from id to observe
-            if (el) {
-                observerRef.current.observe(el);
-            }
-        });
-
-        return () => {
-            observerRef.current?.disconnect();
-        };
-    }, [unseenMessages]);
-
+        await axios.post("/connections", {current: payload.username, other: newContact});
+    }
 
 
     if(!payload) return <p>Loading...</p>
 
-    return <div className="app">
+    return <div className="chat">
         <div className="section left" onClick={() => setConnection(null)}>
             <div className="entry">
-                <h2>Chats</h2>
-                <input type="text" placeholder="Search user"/>
+                <h2>MY CONTACTS</h2>
+                <form onSubmit={addContact}>
+                    <input type="text" value={newContact} placeholder="username" onChange={(e) => setNewContact(e.target.value)}/>
+                    <button type="submit">Add Contact</button>
+                </form>
             </div>
 
             <div className="users">

@@ -60,36 +60,36 @@ body button:hover {
   text-decoration: underline;
 }
 
-.app {
+.chat {
   display: grid;
   grid-template-columns: 1fr 3fr;
   height: 100vh;
   box-sizing: border-box;
 }
-.app img {
+.chat img {
   width: 2em;
 }
-.app .section {
+.chat .section {
   padding: 2em;
   box-sizing: border-box;
 }
-.app .left {
+.chat .left {
   display: flex;
   flex-direction: column;
   gap: 2em;
   background-color: lightgray;
 }
-.app .left .entry {
+.chat .left .entry {
   display: flex;
   flex-direction: column;
   gap: 1em;
 }
-.app .left .users {
+.chat .left .users {
   display: flex;
   flex-direction: column;
   gap: 1em;
 }
-.app .left .users .user {
+.chat .left .users .user {
   background-color: rgba(55, 65, 81, 0.3960784314);
   display: flex;
   gap: 1em;
@@ -97,10 +97,10 @@ body button:hover {
   align-items: center;
   padding: 1em;
 }
-.app .left .users .user .picture {
+.chat .left .users .user .picture {
   position: relative;
 }
-.app .left .users .user .picture .status {
+.chat .left .users .user .picture .status {
   position: absolute;
   right: 0;
   bottom: 0;
@@ -109,25 +109,25 @@ body button:hover {
   border-radius: 50%;
   background-color: gray;
 }
-.app .left .users .user .picture .online {
+.chat .left .users .user .picture .online {
   background-color: rgb(0, 255, 0);
 }
-.app .right .connection {
+.chat .right .connection {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
 }
-.app .right .connection .conn {
+.chat .right .connection .conn {
   display: flex;
   align-items: center;
   height: 4em;
 }
-.app .right .connection .conn .clear {
+.chat .right .connection .conn .clear {
   margin-left: auto;
   cursor: pointer;
 }
-.app .right .connection .messagesArea {
+.chat .right .connection .messagesArea {
   height: 30em;
   overflow-y: auto;
   display: flex;
@@ -140,7 +140,7 @@ body button:hover {
   border: 1px solid lightgray;
   border-radius: 10px;
 }
-.app .right .connection .messagesArea .msg {
+.chat .right .connection .messagesArea .msg {
   padding: 1em;
   border-radius: 1em;
   background-color: #374151;
@@ -150,119 +150,25 @@ body button:hover {
   flex-direction: column;
   gap: 0.2em;
 }
-.app .right .connection .messagesArea .msg .smaller {
+.chat .right .connection .messagesArea .msg .smaller {
   font-size: 0.5em;
 }
-.app .right .connection .messagesArea .mine {
+.chat .right .connection .messagesArea .mine {
   background-color: #2563eb;
   align-self: end;
 }
-.app .right .connection form {
+.chat .right .connection form {
   position: relative;
   display: flex;
   align-items: center;
 }
-.app .right .connection form input, .app .right .connection form button {
+.chat .right .connection form input, .chat .right .connection form button {
   height: 4em;
 }
-.app .right .connection form button {
+.chat .right .connection form button {
   position: absolute;
   right: 0;
   width: fit-content;
-}
-
-.kanban {
-  background-color: rgb(24, 24, 24);
-  display: flex;
-  flex-direction: column;
-  gap: 2em;
-  justify-content: center;
-  align-items: center;
-  padding: 10%;
-  height: 100vh;
-  box-sizing: border-box;
-}
-.kanban h1 {
-  font-size: 2.5em;
-  background-image: linear-gradient(to right, #ff7e5f, #feb47b);
-  background-clip: text;
-  color: transparent;
-}
-.kanban form {
-  display: grid;
-  grid-template-columns: 60% 20% 20%;
-  width: 30em;
-  transform: scale(0.8);
-}
-.kanban form input, .kanban form select {
-  background-color: rgb(51, 51, 51);
-  border: 0;
-  border-radius: 0;
-  color: white;
-  font-weight: 600;
-  height: 4em;
-}
-.kanban form select {
-  border-left: 1px solid black;
-}
-.kanban form button {
-  background-color: orange;
-  border-radius: 0 10px 10px 0;
-  border: 0;
-}
-.kanban .board {
-  display: flex;
-  gap: 1em;
-}
-.kanban .board .list {
-  background-color: rgb(29, 29, 29);
-  width: 20em;
-  height: 22em;
-  border-radius: 1em 1em 0 0;
-  display: grid;
-  grid-template-rows: 15% 85%;
-}
-.kanban .board .list .header {
-  border-top: 4px solid #2980b9;
-  background: linear-gradient(to top right, #0c4f7c, #2980b9);
-  border-radius: inherit;
-  box-sizing: border-box;
-  padding: 0.7em 1em;
-  color: white;
-  font-weight: 600;
-}
-.kanban .board .list .header.in_progress {
-  border-top: 4px solid orange;
-  background: linear-gradient(to top right, rgb(183, 119, 0), orange);
-}
-.kanban .board .list .header.done {
-  border-top: 4px solid rgb(0, 218, 0);
-  background: linear-gradient(to top right, rgb(0, 168, 0), rgb(0, 218, 0));
-}
-.kanban .board .list .items {
-  padding: 0.5em;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-}
-.kanban .board p {
-  user-select: none;
-}
-.kanban .item {
-  background-color: rgb(76, 76, 76);
-  border-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: white;
-  padding: 0.5em;
-  height: 3em;
-  box-sizing: border-box;
-}
-.kanban .dragged {
-  opacity: 0.5;
-  position: fixed;
-  width: 19em;
 }
 
 .ticTacToe {
@@ -519,8 +425,10 @@ body button:hover {
   box-sizing: border-box;
   gap: 1em;
 }
-.team .left .join {
-  background-color: blueviolet;
+.team .left form {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1em;
 }
 .team .left ul {
   padding: 0;
@@ -612,6 +520,123 @@ body button:hover {
   padding: 1em;
   box-sizing: border-box;
   border-radius: 0 0 1em 1em;
+}
+
+.teamKanban {
+  background-color: rgb(24, 24, 24);
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  justify-content: center;
+  align-items: center;
+  padding: 10%;
+  height: 100vh;
+  box-sizing: border-box;
+}
+.teamKanban h1 {
+  font-size: 2.5em;
+  background-image: linear-gradient(to right, #ff7e5f, #feb47b);
+  background-clip: text;
+  color: transparent;
+}
+.teamKanban form {
+  display: grid;
+  grid-template-columns: 60% 20% 20%;
+  width: 30em;
+  transform: scale(0.8);
+}
+.teamKanban form input, .teamKanban form select {
+  background-color: rgb(51, 51, 51);
+  border: 0;
+  border-radius: 0;
+  color: white;
+  font-weight: 600;
+  height: 4em;
+}
+.teamKanban form select {
+  border-left: 1px solid black;
+}
+.teamKanban form button {
+  background-color: orange;
+  border-radius: 0 10px 10px 0;
+  border: 0;
+}
+.teamKanban .board {
+  display: flex;
+  gap: 1em;
+}
+.teamKanban .board .list {
+  background-color: rgb(29, 29, 29);
+  width: 20em;
+  height: 22em;
+  border-radius: 1em 1em 0 0;
+  display: grid;
+  grid-template-rows: 15% 85%;
+}
+.teamKanban .board .list .header {
+  border-top: 4px solid #2980b9;
+  background: linear-gradient(to top right, #0c4f7c, #2980b9);
+  border-radius: inherit;
+  box-sizing: border-box;
+  padding: 0.7em 1em;
+  color: white;
+  font-weight: 600;
+}
+.teamKanban .board .list .header.in_progress {
+  border-top: 4px solid orange;
+  background: linear-gradient(to top right, rgb(183, 119, 0), orange);
+}
+.teamKanban .board .list .header.done {
+  border-top: 4px solid rgb(0, 218, 0);
+  background: linear-gradient(to top right, rgb(0, 168, 0), rgb(0, 218, 0));
+}
+.teamKanban .board .list .items {
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+.teamKanban .board p {
+  user-select: none;
+}
+.teamKanban .item {
+  background-color: rgb(76, 76, 76);
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  padding: 0.5em;
+  height: 3em;
+  box-sizing: border-box;
+}
+.teamKanban .dragged {
+  opacity: 0.5;
+  position: fixed;
+  width: 19em;
+}
+.teamKanban .currentTeam, .teamKanban .roomMembers {
+  cursor: pointer;
+  position: fixed;
+  top: 2em;
+  left: 7em;
+  width: 10em;
+  height: 2.5em;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: lightgray;
+  font-weight: 500;
+  box-shadow: 10px 10px 1em rgba(0, 0, 0, 0.373);
+}
+.teamKanban .roomMembers {
+  left: unset;
+  right: 3em;
+  gap: 0.5em;
+}
+.teamKanban .roomMembers img {
+  width: 2em;
 }
 
 /*# sourceMappingURL=style.css.map */

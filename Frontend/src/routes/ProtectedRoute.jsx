@@ -9,9 +9,6 @@ export default function ProtectedRoute({children}) {
         if(!token) return;
 
         socket.auth = {token};
-        socket.connect();
-
-        return () => socket.disconnect();
     }, [token]);
 
     return token ? children : <Navigate to="/login" replace />;

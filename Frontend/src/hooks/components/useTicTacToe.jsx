@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import useTokenDecode from "../useTokenDecode";
-import useFetchUsers from "../chat/useFetchUsers";
-import useFetchConnection from "../chat/useFetchConnection";
+import { useFetchUsers, useFetchConnection } from "../useFetch";
 import { socket } from "../../sockets/socket";
 
 export default function useTicTacToe() {

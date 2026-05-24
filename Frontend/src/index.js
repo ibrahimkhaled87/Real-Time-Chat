@@ -1,16 +1,15 @@
 import React from "react";
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import App from "./pages/App";
-import Kanban from "./pages/Kanban";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicOnlyRoute from "./routes/PublicOnlyRoute";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import AppLayout from "./layouts/AppLayout";
+import Chat from "./pages/Chat";
 import TicTacToe from "./pages/TicTacToe";
 import Whiteboard from "./pages/Whiteboard";
-import AppLayout from "./layouts/AppLayout";
-import Team from "./pages/Team";
+import Team from "./pages/team/Team";
 import TeamKanban from "./pages/team/TeamKanban";
 
 const router = createBrowserRouter([
@@ -37,7 +36,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "",
-                element: <App />
+                element: <Chat />
             },
             {
                 path: "game",

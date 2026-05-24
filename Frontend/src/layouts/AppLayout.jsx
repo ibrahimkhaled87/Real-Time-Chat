@@ -1,55 +1,8 @@
-import { Outlet, useNavigate } from "react-router-dom";
-import { socket } from "../sockets/socket";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import useTokenDecode from "../hooks/useTokenDecode";
+import { Outlet } from "react-router-dom";
+import useNav from "../hooks/components/useNav";
 
 export default function AppLayout() {    
-    const {payload} = useTokenDecode();
-
-    //Logout
-    const navigate = useNavigate();
-    const logout = () => {
-        localStorage.removeItem("token");
-        socket.disconnect();
-        navigate("/login");
-    }
-
-    //Notification
-    const [notifications, setNotifications] = useState([]);
-    const [show, setShow] = useState(false);
-    useEffect(() => { //Fetch
-        if(!payload) return;
-        const getData = async() => {
-            const response = await axios.get("/users/notifications", {params: {user: payload?.username}})
-            setNotifications(response.data);
-        }
-        getData();
-    }, [payload])
-
-    useEffect(() => { //Listen
-        socket.on("notification", notification => {
-            console.log(notification);
-            setNotifications(prev => [...prev, notification])
-        })
-
-        return () => {
-            socket.off("notification");
-        }
-    }, [])
-
-    const acceptRequest = async (notification) => {
-        //extract info
-        const user = notification.match(/User (\w+)/)?.[1];
-        const team = notification.match(/team (\d+)/)?.[1];
-        
-        //send to backend
-        const response = await axios.post("/teams/members", {user: user, team: team});
-    }
-    const rejectRequest = (notification) => {
-        console.log(notification)
-    }
-
+    const {show, setShow, notifications, logout, rejectRequest, acceptRequest, navigate} = useNav();
 
     return <div className="appLayout">
         <div className="main-nav">

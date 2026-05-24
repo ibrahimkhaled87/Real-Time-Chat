@@ -5,7 +5,16 @@ export const getUsers = async(req, res) => {
     console.log(req.query);
     const {current} = req.query;
 
-    const data = await db.query("SELECT * FROM users WHERE username != $1", [current]);
+    //Get users have connection with current
+    const data = await db.query(`SELECT u.*
+        FROM connections c
+        JOIN users u
+        ON u.username = CASE
+            WHEN (c.user1 = $1) THEN c.user2
+            ELSE c.user1
+        END
+        WHERE c.user1 = $1
+        OR c.user2 = $1;`, [current]);
     res.json(data.rows);
 }
 

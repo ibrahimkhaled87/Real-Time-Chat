@@ -1,4 +1,4 @@
-import useTicTacToe from "../hooks/tic-tac-toe/useTicTacToe";
+import useTicTacToe from "../hooks/components/useTicTacToe";
 
 export default function TicTacToe() {
     const {users, connection, available, myChar, payload, joined, board, win, handleClick, getConnection, mePlay, otherPlay, otherUser, otherUserChar} = useTicTacToe();

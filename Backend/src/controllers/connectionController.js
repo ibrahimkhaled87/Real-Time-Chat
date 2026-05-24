@@ -11,3 +11,17 @@ export const getConnections = async(req, res) => {
     `, [this_user, other_user]);
     res.json(data.rows);
 }
+
+export const postConnection = async(req, res) => {
+    console.log("POST connection called");
+    console.log(req.body)
+    const {current, other} = req.body;
+
+    const data = await db.query("INSERT INTO connections(user1, user2) VALUES($1, $2)", [current, other]);
+
+    const io = req.app.get("io");
+    io.to(`user:${current}`).emit("notification", {notification: `Added user ${other}`});
+    io.to(`user:${other}`).emit("notification", {notification: `User ${current} added you`});
+
+    res.json(data.rows);
+}

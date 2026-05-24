@@ -1,30 +1,17 @@
 import { useEffect, useState } from "react";
-import TeamChat from "./team/TeamChat";
+import TeamChat from "./TeamChat";
 import axios from "axios";
-import useTokenDecode from "../hooks/useTokenDecode";
-import { socket } from "../sockets/socket";
-import TeamBoards from "./team/TeamBoards";
+import useTokenDecode from "../../hooks/useTokenDecode";
+import { socket } from "../../sockets/socket";
+import TeamBoards from "./TeamBoards";
+import {useFetchTeams} from "../../hooks/useFetch";
 
 export default function Team() {
     const {payload} = useTokenDecode();
 
     //Selected team
     const [selectedTeam, setSelectedTeam] = useState();
-    const [availableTeams, setAvailableTeams] = useState();
-    useEffect(() => {
-        if(!payload) return;
-        const getData = async() => {
-            try {
-                const response = await axios.get("/teams", {params: {user: payload?.username}});
-                setAvailableTeams(response.data);
-                setSelectedTeam(response.data[0].id);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        getData();
-    }, [payload])
-
+    const {teams, setTeams} = useFetchTeams(payload?.username);
 
     //Selected tab
     const [selectedTab, setSelectedTab] = useState(null);
@@ -40,7 +27,7 @@ export default function Team() {
         <div className="left">
             <h2>My Teams</h2>
             <select name="team" onChange={(e) => setSelectedTeam(e.target.value)}>
-                {availableTeams?.map(team => (
+                {teams?.map(team => (
                     <option value={team.id}>{team.name}</option>
                 ))}
             </select>

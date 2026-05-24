@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import useTeamKanban from "../../hooks/kanban/useTeamKanban";
+import useTeamKanban from "../../hooks/components/useTeamKanban";
 import { socket } from "../../sockets/socket";
 import { useEffect } from "react";
 
@@ -20,7 +20,7 @@ export default function TeamKanban() {
         position
     } = useTeamKanban({teamId, boardId});
 
-    return <div className="kanban" onMouseUp={() => setDragging(null)} onMouseMove={mouseMove}>
+    return <div className="teamKanban" onMouseUp={() => setDragging(null)} onMouseMove={mouseMove}>
         <h1>React Kanban Board</h1>
         <form onSubmit={submit} >
             <input type="text" name="task" value={form.task} onChange={handleChange} />
@@ -73,6 +73,7 @@ export default function TeamKanban() {
             </div>
         </div>
 
+        {/* Dragging ghost */}
         {!(dragging || remoteDragging) ? null : <div className="dragged item" style={{
             left: position.x,
             top: position.y,
@@ -81,5 +82,17 @@ export default function TeamKanban() {
             <p>{(dragging || remoteDragging).task}</p>
             <p>&times;</p>
         </div> }
+
+        {/* Current team */}
+        <div className="currentTeam">
+            <p>Team 1</p>
+        </div>
+
+        {/* In room users */}
+        <div className="roomMembers">
+            <img src="/images/profile.svg" alt="" />
+            <img src="/images/profile.svg" alt="" />
+            <img src="/images/profile.svg" alt="" />
+        </div>
     </div>
 }
