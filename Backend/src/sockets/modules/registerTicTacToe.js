@@ -1,24 +1,41 @@
+const games = new Map();
+
 export function registerTicTacToe(io, socket) {
-    socket.on("join_game", ({conn_id}) => {
-        console.log("JOIN GAME", conn_id)
+    socket.on("join_game", ({conn_id, username}) => {
+        console.log("JOIN GAME", conn_id, username)
         const roomName = `game:${conn_id}`;
         socket.join(roomName);
 
-        const room = io.sockets.adapter.rooms.get(roomName);
+        // Room set in map
+        if (!games.has(roomName)) games.set(roomName, new Set());
+        const room = games.get(roomName);
         
-        if(room?.size===2);
-            io.to(roomName).emit("game_state", room.size);
+        // User already may exist
+        if (room.has(username)) return;
+        room.add(username);
+        
+        io.to(roomName).emit("game_state", {size: room.size, players:[...room]});
     });
 
-    socket.on("close_game", ({conn_id}) => {
-        console.log("CLOSE GAME", conn_id);
+    socket.on("close_game", ({conn_id, username}) => {
+        console.log("CLOSE GAME", conn_id, username);
         const roomName = `game:${conn_id}`;
         socket.leave(roomName);
-                
-        const room = io.sockets.adapter.rooms.get(roomName);
-        
-        if(room?.size===1);
-            io.to(roomName).emit("game_state", room.size);
+            
+        // Room set in map
+        const room = games.get(roomName);
+        if (!room) return;
+
+        // User already not exist
+        if (!room.has(username)) return;
+        room.delete(username);
+
+        // cleanup empty room
+        if (room.size === 0) {
+            games.delete(roomName);
+        }
+
+        io.to(roomName).emit("game_state", {size: room.size, players:[...room]}); //only people inside room notified
     })
 
     socket.on("board_update", ({ conn_id, i, value }) => {

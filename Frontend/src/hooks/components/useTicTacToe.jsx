@@ -92,10 +92,24 @@ export default function useTicTacToe() {
     useEffect(() => {
         if(!connection) return;
 
+        //Reset board
+        setBoard(["", "", "", "", "", "", "", "", ""]);
+        setAvailable(true);
+        setTurn("X");
+        setMyChar(null);
+
         socket.emit("join_game", {conn_id: connection[0].id, username: payload.username})
 
+        const closeGame = () => {
+            socket.emit("close_game", { conn_id: connection[0].id, username: payload.username });
+        };
+        window.addEventListener("pagehide", closeGame);
+        window.addEventListener("beforeunload", closeGame);
+
         return () => {
-            socket.emit("close_game", {conn_id: connection[0].id, username: payload.username})
+            closeGame();
+            window.removeEventListener("pagehide", closeGame);
+            window.removeEventListener("beforeunload", closeGame);
         }
     }, [connection])
 
@@ -105,7 +119,7 @@ export default function useTicTacToe() {
     useEffect(() => {
         socket.on("game_state", (state) => {
             console.log("GAME STATE", state);
-            if(state===2)
+            if(state.size===2)
                 setJoined("available");
             else
                 setJoined("offline");
@@ -127,7 +141,7 @@ export default function useTicTacToe() {
         })
 
         return () => {
-            socket.off("join_game");
+            socket.off("game_state");
             socket.off("board_update");
         }
     }, [])
