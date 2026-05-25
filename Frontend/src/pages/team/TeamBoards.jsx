@@ -1,22 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
+import { useFetchTeamBoards } from "../../hooks/useFetch";
 
 export default function TeamBoards({team, type}) {
-    //Fetch team boards
-    const [teamBoards, setTeamBoards] = useState();
-    useEffect(() => {
-        const getData = async() => {
-            try {
-                const response = await axios.get("/teams/boards", {params: {team: team, type: type}});
-                setTeamBoards(response.data);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        getData();
-    }, [])
-
+    const {teamBoards, setTeamBoards} = useFetchTeamBoards({team, type});
     const navigate = useNavigate();
 
     return <div className="teamBoards">

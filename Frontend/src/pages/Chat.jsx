@@ -17,25 +17,19 @@ export default function Chat() {
         connection,
         getConnection,
         setConnection,
-        messageRefs
+        messageRefs,
+        newContact,
+        setNewContact,
+        addContact
     } = useChat(payload?.username);
-
-    //Add connection
-    const [newContact, setNewContact] = useState("");
-    const addContact = async (e) => {
-        e.preventDefault();
-        setNewContact("");
-
-        await axios.post("/connections", {current: payload.username, other: newContact});
-    }
 
 
     if(!payload) return <p>Loading...</p>
 
     return <div className="chat">
-        <div className="section left" onClick={() => setConnection(null)}>
+        <div className="left">
             <div className="entry">
-                <h2>MY CONTACTS</h2>
+                <h3>My Contacts</h3>
                 <form onSubmit={addContact}>
                     <input type="text" value={newContact} placeholder="username" onChange={(e) => setNewContact(e.target.value)}/>
                     <button type="submit">Add Contact</button>
@@ -44,7 +38,11 @@ export default function Chat() {
 
             <div className="users">
                 {!users? <p>Loading...</p> : users.map(user => (
-                    <div className="user" onClick={(e) => {e.stopPropagation(); getConnection(user.username)}}>
+                    <div 
+                        className="user" 
+                        onClick={(e) => {e.stopPropagation(); getConnection(user.username)}}
+                        style={{backgroundColor: (connection?.[0]?.user1===user.username || connection?.[0]?.user2===user.username) && "lightgray"}}
+                    >
                         <div className="picture">
                             <img src="/images/profile.svg" alt="" />
                             <div className={`status ${user.status}`} ></div>
@@ -54,10 +52,10 @@ export default function Chat() {
                 )) }
             </div>
         </div>
-        <div className="section right">
+        <div className="right">
             {!connection? <p>Select user to chat</p> : <div className="connection">
                 <div className="conn">
-                    <p>{connection[0].user1===payload.username? connection[0].user2: connection[0].user1}</p>
+                    <p>{users.find(user => (user.username===connection[0].user1 || user.username===connection[0].user2)).full_name}</p>
                     {!typing ? null :  <DotLottieReact src="images/typing.lottie" loop autoplay style={{width: "10em"}} /> }
                 </div>
                 

@@ -28,6 +28,13 @@ const router = createBrowserRouter([
         </PublicOnlyRoute>
     },
     {
+        path: "/whiteboard",
+        element: 
+        <ProtectedRoute>
+            <Whiteboard />
+        </ProtectedRoute>
+    },
+    {
         path: "",
         element: 
         <ProtectedRoute>

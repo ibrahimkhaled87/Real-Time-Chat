@@ -76,3 +76,21 @@ export function useFetchTeams(user) {
 
     return {teams, setTeams};
 }
+
+// Team boards
+export function useFetchTeamBoards({team, type}) {
+    const [teamBoards, setTeamBoards] = useState();
+    useEffect(() => {
+        const getData = async() => {
+            try {
+                const response = await axios.get("/teams/boards", {params: {team: team, type: type}});
+                setTeamBoards(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getData();
+    }, [])
+
+    return {teamBoards, setTeamBoards};
+}

@@ -5,6 +5,7 @@ import useTokenDecode from "../../hooks/useTokenDecode";
 import { socket } from "../../sockets/socket";
 import TeamBoards from "./TeamBoards";
 import {useFetchTeams} from "../../hooks/useFetch";
+import Overlay from "../../components/Overlay";
 
 export default function Team() {
     const {payload} = useTokenDecode();
@@ -12,6 +13,11 @@ export default function Team() {
     //Selected team
     const [selectedTeam, setSelectedTeam] = useState();
     const {teams, setTeams} = useFetchTeams(payload?.username);
+    useEffect(() => {
+        if(!teams) return;
+        setSelectedTeam(teams[0].id);
+    }, [teams])
+
 
     //Selected tab
     const [selectedTab, setSelectedTab] = useState(null);
@@ -23,18 +29,21 @@ export default function Team() {
         socket.emit("request_team_join", {user: payload.username, team: requested})
     }
 
+    //Overlay?
+    const [overlay, setOverlay] = useState(false);
+
     return <div className="team">
         <div className="left">
-            <h2>My Teams</h2>
+            <h3>My Teams</h3>
             <select name="team" onChange={(e) => setSelectedTeam(e.target.value)}>
                 {teams?.map(team => (
                     <option value={team.id}>{team.name}</option>
                 ))}
             </select>
-            <form onSubmit={requestTeamJoin}>
-                <input type="text" placeholder="Team id" onChange={(e) => setRequested(e.target.value)}/>
-                <button type="submit">Request Team Join</button>
-            </form>
+            <div className="buttons">
+                <button className="create" onClick={()=>setOverlay("create team")}>+ Create Team</button>
+                <button className="join" onClick={()=>setOverlay("join team")}>Request Team Join</button>
+            </div>
             <ul className="team_features">
                 <li onClick={() => setSelectedTab("messages")}>Team Chat</li>
                 <li onClick={() => setSelectedTab("kanban")}>Kanban Boards</li>
@@ -47,5 +56,10 @@ export default function Team() {
                 : selectedTab==="kanban"? <TeamBoards team={selectedTeam} type="kanban" />
                 : null }
         </div>
+
+        {/* Create team */}
+        {overlay &&
+            <Overlay info={overlay} onClose={()=>setOverlay(false)} />
+        }
     </div>
 }

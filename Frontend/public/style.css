@@ -4,7 +4,7 @@ body {
   padding: 0;
   font-family: "poppins";
 }
-body p, body h1, body h2 {
+body p, body h1, body h2, body h3 {
   margin: 0;
 }
 body input, body button, body select {
@@ -69,48 +69,68 @@ body button:hover {
 .chat img {
   width: 2em;
 }
-.chat .section {
+.chat .left {
   padding: 2em;
   box-sizing: border-box;
-}
-.chat .left {
   display: flex;
   flex-direction: column;
   gap: 2em;
-  background-color: lightgray;
+  background-color: #ecf0f1;
 }
 .chat .left .entry {
   display: flex;
   flex-direction: column;
   gap: 1em;
 }
+.chat .left .entry form input {
+  background-color: lightgray;
+}
+.chat .left .entry form {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1em;
+}
 .chat .left .users {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 0.5em;
 }
 .chat .left .users .user {
-  background-color: rgba(55, 65, 81, 0.3960784314);
   display: flex;
   gap: 1em;
-  border-radius: 1em;
+  border-radius: 0.5em;
+  box-sizing: border-box;
   align-items: center;
-  padding: 1em;
+  padding: 0.5em;
+}
+.chat .left .users .user:hover {
+  background-color: lightgray;
 }
 .chat .left .users .user .picture {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.chat .left .users .user .picture img {
+  width: 3em;
 }
 .chat .left .users .user .picture .status {
   position: absolute;
   right: 0;
   bottom: 0;
-  width: 0.5em;
-  height: 0.5em;
+  width: 0.7em;
+  height: 0.7em;
   border-radius: 50%;
   background-color: gray;
+  border: 1px solid white;
 }
 .chat .left .users .user .picture .online {
   background-color: rgb(0, 255, 0);
+}
+.chat .right {
+  padding: 2em;
+  box-sizing: border-box;
 }
 .chat .right .connection {
   display: flex;
@@ -206,7 +226,7 @@ body button:hover {
   background-color: rgba(12, 79, 124, 0.3529411765);
 }
 .ticTacToe .area {
-  width: 70%;
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -307,6 +327,12 @@ body button:hover {
 }
 .whiteboard .toolset .blue {
   background-color: blue;
+}
+.whiteboard canvas {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: block;
 }
 
 .appLayout {
@@ -415,32 +441,41 @@ body button:hover {
 
 .team {
   display: grid;
-  grid-template-columns: 20% 80%;
+  grid-template-columns: 1fr 3fr;
 }
 .team .left {
-  background-color: lightgray;
+  background-color: #ecf0f1;
   display: flex;
   flex-direction: column;
-  padding: 1em;
+  padding: 2em;
   box-sizing: border-box;
   gap: 1em;
 }
-.team .left form {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
+.team .left .buttons {
+  display: flex;
   gap: 1em;
+}
+.team .left .buttons button {
+  font-size: 0.7em;
+}
+.team .left .buttons .join {
+  background-color: orange;
+}
+.team .left .buttons .join:hover {
+  background-color: rgb(209, 136, 0);
 }
 .team .left ul {
   padding: 0;
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
+  gap: 1em;
 }
 .team .left ul li {
   cursor: pointer;
   width: 100%;
   padding: 0.5em;
+  height: 3em;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
@@ -449,16 +484,22 @@ body button:hover {
   border-radius: 10px;
 }
 .team .right {
-  padding: 1em;
+  padding: 2em;
   box-sizing: border-box;
 }
 
+.teamChat {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
 .teamChat .messages {
   height: 35em;
   overflow-y: auto;
   display: flex;
   flex-direction: column-reverse;
   gap: 0.5em;
+  border: 1px solid lightgray;
 }
 .teamChat .messages .message {
   width: fit-content;
@@ -475,10 +516,21 @@ body button:hover {
 .teamChat .messages .message.mine .bubble {
   background-color: #0c4f7c;
 }
+.teamChat form {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.teamChat form button {
+  position: absolute;
+  right: 0;
+  width: fit-content;
+}
 
 .teamBoards .cards {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   grid-template-rows: auto;
   gap: 1em;
   margin-top: 1em;
@@ -488,7 +540,7 @@ body button:hover {
   background-color: rgba(52, 152, 219, 0.4862745098);
   border-radius: 1em;
   width: 100%;
-  height: 18em;
+  height: 13em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -501,7 +553,7 @@ body button:hover {
   background-color: rgba(52, 152, 219, 0.4862745098);
   border-radius: 1em;
   width: 100%;
-  height: 18em;
+  height: 13em;
   display: grid;
   grid-template-rows: 70% 30%;
 }
@@ -637,6 +689,25 @@ body button:hover {
 }
 .teamKanban .roomMembers img {
   width: 2em;
+}
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.415);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  box-sizing: border-box;
+}
+.overlay .modal {
+  background-color: #ecf0f1;
+  border-radius: 10px;
+  width: 30em;
+  height: 20em;
 }
 
 /*# sourceMappingURL=style.css.map */

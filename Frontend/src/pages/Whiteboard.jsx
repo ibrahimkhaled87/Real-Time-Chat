@@ -12,9 +12,12 @@ export default function Whiteboard() {
     useEffect(() => {
         const canvas = canvasRef.current;
 
-        // Set canvas size
-        canvas.width = 800;
-        canvas.height = 500;
+        // Get display size
+        const rect = canvas.getBoundingClientRect();
+
+        // Set actual pixel resolution
+        canvas.width = rect.width;
+        canvas.height = rect.height;
 
         const ctx = canvas.getContext("2d");
 
@@ -62,6 +65,32 @@ export default function Whiteboard() {
     };
 
 
+    // Canvas notes
+    const [notes, setNotes] = useState([]);
+    const addSticky = () => {
+        const newNote = {
+            id: Date.now(),
+            x: 100,
+            y: 100,
+            text: "New note"
+        };
+        setNotes(prev => [...prev, newNote]);
+    };
+    const dragNote = (e, id) => {
+        const x = e.clientX;
+        const y = e.clientY;
+
+        setNotes(prev =>
+            prev.map(note =>
+                note.id === id
+                    ? { ...note, x, y }
+                    : note
+            )
+        );
+    };
+
+
+
     // Socket listen
     useEffect(() => {
         const ctx = canvasRef.current.getContext("2d");
@@ -94,8 +123,6 @@ export default function Whiteboard() {
 
 
     return <div className="whiteboard">
-        <h1>Whiteboard</h1>
-
         <canvas 
             ref={canvasRef} 
             onMouseDown={startDraw} 
@@ -110,6 +137,60 @@ export default function Whiteboard() {
             <div className="color blue" onClick={() => setColor("blue")}></div>
             <div className="color red" onClick={() => setColor("red")}></div>
             <div className="color green" onClick={() => setColor("green")}></div>
+
+            <button onClick={addSticky}>
+                + Sticky Note
+            </button>
         </div>
+
+
+        {notes.map(note => (
+            <div
+                key={note.id}
+                className="sticky"
+                contentEditable
+                suppressContentEditableWarning
+                style={{
+                    position: "absolute",
+                    left: note.x,
+                    top: note.y,
+                    width: 150,
+                    minHeight: 100,
+                    background: "yellow",
+                    padding: 10,
+                    borderRadius: 8,
+                    cursor: "move"
+                }}
+                onInput={(e) => {
+                    const updatedText = e.currentTarget.innerText;
+
+                    setNotes(prev =>
+                        prev.map(n =>
+                            n.id === note.id ? { ...n, text: updatedText } : n
+                        )
+                    );
+
+                    socket.emit("update_note", {
+                        id: note.id,
+                        text: updatedText
+                    });
+                }}
+                onMouseDown={(e) => {
+                    const startX = e.clientX;
+                    const startY = e.clientY;
+
+                    const move = (ev) => {
+                        dragNote(ev, note.id);
+                    };
+
+                    window.addEventListener("mousemove", move);
+                    window.addEventListener("mouseup", () => {
+                        window.removeEventListener("mousemove", move);
+                    }, { once: true });
+                }}
+            >
+                {note.text}
+            </div>
+        ))}
     </div>
 }

@@ -128,6 +128,14 @@ export default function useChat(current) {
         }
     }, [setMessages, setUsers, setTyping])
 
+    //Add connection
+    const [newContact, setNewContact] = useState("");
+    const addContact = async (e) => {
+        e.preventDefault();
+        setNewContact("");
+
+        await axios.post("/connections", {current: payload.username, other: newContact});
+    }
 
     return {
         users,
@@ -139,6 +147,9 @@ export default function useChat(current) {
         connection,
         getConnection,
         setConnection,
-        messageRefs
+        messageRefs,
+        newContact,
+        setNewContact,
+        addContact
     };
 }

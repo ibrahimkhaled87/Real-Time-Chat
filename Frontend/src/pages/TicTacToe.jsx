@@ -17,7 +17,7 @@ export default function TicTacToe() {
             {!win? null : <h2>{`${win} Wins`}</h2> }
 
             {!connection? <p>Choose user to start game</p> : <div className="game">
-                <div className="user other_user" style={otherPlay ? {border: "3px solid green"} : null}>
+                <div className="user other_user" style={otherPlay ? {border: "3px solid #26de81"} : null}>
                     {otherUser}
                     <p className={`status ${joined}`}>{joined}</p>
                     <p>{otherUserChar}</p>
@@ -29,7 +29,7 @@ export default function TicTacToe() {
                     </div> )}
                 </div>
                 
-                <div className="user me" style={mePlay? {border: "3px solid green"} : null}>
+                <div className="user me" style={mePlay? {border: "3px solid #26de81"} : null}>
                     {payload.username}
                     <p>{myChar}</p>
                 </div>

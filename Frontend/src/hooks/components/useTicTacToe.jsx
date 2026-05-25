@@ -92,15 +92,23 @@ export default function useTicTacToe() {
     useEffect(() => {
         if(!connection) return;
 
-        socket.emit("join_game", connection[0].id)
+        socket.emit("join_game", {conn_id: connection[0].id, username: payload.username})
+
+        return () => {
+            socket.emit("close_game", {conn_id: connection[0].id, username: payload.username})
+        }
     }, [connection])
 
 
     // Listeners
     const [joined, setJoined] = useState("offline");
     useEffect(() => {
-        socket.on("join_game", () => {
-            setJoined("available");
+        socket.on("game_state", (state) => {
+            console.log("GAME STATE", state);
+            if(state===2)
+                setJoined("available");
+            else
+                setJoined("offline");
         })
 
         socket.on("board_update", ({i, value}) => {

@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import useTeamKanban from "../../hooks/components/useTeamKanban";
 import { socket } from "../../sockets/socket";
 import { useEffect } from "react";
+import { useFetchTeamBoards } from "../../hooks/useFetch";
 
 export default function TeamKanban() {
     const {teamId, boardId} = useParams();
@@ -20,8 +21,11 @@ export default function TeamKanban() {
         position
     } = useTeamKanban({teamId, boardId});
 
+    //Get board name
+    const {teamBoards, setTeamBoards} = useFetchTeamBoards({team:teamId, type:'kanban'});
+
     return <div className="teamKanban" onMouseUp={() => setDragging(null)} onMouseMove={mouseMove}>
-        <h1>React Kanban Board</h1>
+        <h1>{teamBoards?.find(board => board.id==boardId)?.name}</h1>
         <form onSubmit={submit} >
             <input type="text" name="task" value={form.task} onChange={handleChange} />
             <select name="type" onChange={handleChange}>
