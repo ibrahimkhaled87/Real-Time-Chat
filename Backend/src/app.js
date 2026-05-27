@@ -20,7 +20,7 @@ const corsOptions = {
   credentials: true
 };
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+app.options("/*", cors(corsOptions));
 app.use("/uploads", express.static("uploads"));
 
 // Routes
