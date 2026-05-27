@@ -33,5 +33,9 @@ app.get("/", (req, res) => {
   console.log("HIT WITHOUT DB");
   res.json([{ test: true }]);
 });
+app.use((req, res, next) => {
+  console.log("REQUEST:", req.method, req.url);
+  next();
+});
 
 export default app;
