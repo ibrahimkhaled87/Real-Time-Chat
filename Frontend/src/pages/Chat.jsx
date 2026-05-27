@@ -41,7 +41,7 @@ export default function Chat() {
     if(!payload) return <p>Loading...</p>
 
     return <div className="chat">
-        <div className="left">
+        <div className={`left ${connection? "hide" : ""}`}>
             <div className="entry">
                 <h3>My Contacts</h3>
                 <form onSubmit={addContact}>
@@ -70,9 +70,10 @@ export default function Chat() {
                 )) }
             </div>
         </div>
-        <div className="right">
+        <div className={`right ${!connection? "hide" : ""}`}>
             {!connection? <p>Select user to chat</p> : <div className="connection">
                 <div className="conn">
+                    <p className="back" onClick={()=>setConnection(null)} >&larr;</p>
                     <p>{users.find(user => (user.username===connection[0].user1 || user.username===connection[0].user2)).full_name}</p>
                     {!typing ? null :  <DotLottieReact src="images/typing.lottie" loop autoplay style={{width: "10em"}} /> }
                 </div>

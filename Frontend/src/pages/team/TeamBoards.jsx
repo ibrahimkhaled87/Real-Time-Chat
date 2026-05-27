@@ -5,7 +5,7 @@ import { useFetchTeamBoards } from "../../hooks/useFetch";
 import Overlay from "../../components/Overlay";
 import Message from "../../components/Message";
 
-export default function TeamBoards({team}) {
+export default function TeamBoards({team, onClose}) {
     const {teamBoards, setTeamBoards} = useFetchTeamBoards({team});
     const navigate = useNavigate();
 
@@ -25,6 +25,7 @@ export default function TeamBoards({team}) {
 
     return <div className="teamBoards">
         <div className="top">
+            <p className="close" onClick={onClose}>&larr;</p>
             <h2>Team #{team} Boards</h2>
         </div>
         <div className="cards">

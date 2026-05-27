@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import useTokenDecode from "../../hooks/useTokenDecode";
 import { socket } from "../../sockets/socket";
 
-export default function TeamChat({team}) {
+export default function TeamChat({team, onClose}) {
     const {payload} = useTokenDecode();
     useEffect(() => {
         socket.emit("join_team", team)
@@ -45,6 +45,7 @@ export default function TeamChat({team}) {
     
     return <div className="teamChat">
         <div className="top">
+            <p className="close" onClick={onClose}>&larr;</p>
             <h2>Team #{team} Chat</h2>
         </div>
         <div className="messages">

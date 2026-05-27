@@ -26,7 +26,7 @@ export default function Team() {
     const [overlay, setOverlay] = useState(false);
 
     return <div className="team">
-        <div className="left">
+        <div className={`left ${selectedTab? "hide" : ""}`}>
             <h3>My Teams</h3>
             <select name="team" onChange={(e) => setSelectedTeam(e.target.value)}>
                 {teams?.map(team => (
@@ -42,11 +42,11 @@ export default function Team() {
                 <li onClick={() => setSelectedTab("boards")}>Boards</li>
             </ul>
         </div>
-        <div className="right">
+        <div className={`right ${!selectedTab? "hide" : ""}`}>
             {!selectedTab
                 ? <p>Select Tab</p> 
-                : selectedTab==="messages"? <TeamChat team={selectedTeam} />
-                : selectedTab==="boards"? <TeamBoards team={selectedTeam} />
+                : selectedTab==="messages"? <TeamChat team={selectedTeam} onClose={()=>setSelectedTab(null)} />
+                : selectedTab==="boards"? <TeamBoards team={selectedTeam} onClose={()=>setSelectedTab(null)} />
                 : null }
         </div>
 
