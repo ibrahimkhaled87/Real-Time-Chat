@@ -10,6 +10,8 @@ const db = new pg.Client({
     port: process.env.DB_PORT,
     ssl: { rejectUnauthorized: false }
 })
-db.connect();
+db.connect()
+    .then(() => console.log("DB connected"))
+    .catch(err => console.log("DB connection error:", err));
 
 export default db;

@@ -6,6 +6,7 @@ export const getUsers = async(req, res) => {
     const {current} = req.query;
 
     try {
+        console.log("before query");
         //Get users have connection with current
         const data = await db.query(`SELECT u.*
             FROM connections c
@@ -16,8 +17,10 @@ export const getUsers = async(req, res) => {
             END
             WHERE c.user1 = $1
             OR c.user2 = $1;`, [current]);
+            console.log("after query");
         res.json(data.rows);
     } catch(error) {
+        console.log("DB Failed");
         res.status(500).json({ error: "DB failed" });
     }
 }
