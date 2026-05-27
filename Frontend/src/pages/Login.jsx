@@ -4,8 +4,8 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import api from "../api/axios";
 
 export default function Login() {
-    console.log("API URL:", import.meta.env.VITE_API_URL);
-
+    console.log(process.env.REACT_APP_API_URL);
+    
     //Read credintials
     const [credintials, setCredintials] = useState({username: "", password: ""});
     const handleChange = (e) => {
