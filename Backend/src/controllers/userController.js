@@ -5,17 +5,21 @@ export const getUsers = async(req, res) => {
     console.log(req.query);
     const {current} = req.query;
 
-    //Get users have connection with current
-    const data = await db.query(`SELECT u.*
-        FROM connections c
-        JOIN users u
-        ON u.username = CASE
-            WHEN (c.user1 = $1) THEN c.user2
-            ELSE c.user1
-        END
-        WHERE c.user1 = $1
-        OR c.user2 = $1;`, [current]);
-    res.json(data.rows);
+    try {
+        //Get users have connection with current
+        const data = await db.query(`SELECT u.*
+            FROM connections c
+            JOIN users u
+            ON u.username = CASE
+                WHEN (c.user1 = $1) THEN c.user2
+                ELSE c.user1
+            END
+            WHERE c.user1 = $1
+            OR c.user2 = $1;`, [current]);
+        res.json(data.rows);
+    } catch(error) {
+        res.status(500).json({ error: "DB failed" });
+    }
 }
 
 export const getUserNotifications = async(req, res) => {
