@@ -23,6 +23,11 @@ app.use(cors(corsOptions));
 app.use("/uploads", express.static("uploads"));
 
 // Routes
+app.use((req, res, next) => {
+  console.log("REQUEST:", req.method, req.url);
+  next();
+});
+
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/connections", connectionRoutes);
@@ -32,10 +37,6 @@ app.use("/teams", teamRoutes);
 app.get("/", (req, res) => {
   console.log("HIT WITHOUT DB");
   res.json([{ test: true }]);
-});
-app.use((req, res, next) => {
-  console.log("REQUEST:", req.method, req.url);
-  next();
 });
 
 export default app;
