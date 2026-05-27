@@ -3,9 +3,22 @@ import db from "../config/db.js";
 export const getMessages = async(req, res) => {
     console.log("GET messages called");
     console.log(req.query);
-    const {conn_id} = req.query;
+    const {conn_id, current} = req.query;
 
-    const data = await db.query("SELECT * FROM messages WHERE conn_id=$1 ORDER BY id DESC", [conn_id]);
+    if(conn_id) {
+        const data = await db.query("SELECT * FROM messages WHERE conn_id=$1 ORDER BY id DESC", [conn_id]);
+        return res.json(data.rows);
+    }
+
+    console.log("GET ALLLLLL")
+    console.log(current)
+    const data = await db.query(`SELECT * FROM 
+        messages m 
+        JOIN connections c 
+        ON m.conn_id = c.id 
+        WHERE (user1=$1 OR user2=$1) 
+        ORDER BY sent_at DESC`, [current]);
+    console.log(data.rows);
     res.json(data.rows);
 }
 

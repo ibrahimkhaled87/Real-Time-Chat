@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { socket } from "../../sockets/socket";
+import useTokenDecode from "../useTokenDecode";
 
 export default function useTeamKanban({teamId, boardId}) {
+    const {payload} = useTokenDecode();
+
     const [form, setForm] = useState({task: "", type: "to_do"});
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -13,8 +16,8 @@ export default function useTeamKanban({teamId, boardId}) {
     }
 
     useEffect(() => {
-        socket.emit("join_team", teamId);
-    }, [])
+        socket.emit("join_kanban", ({username:payload?.username, board:boardId}));
+    }, [payload])
 
     // ====== ITEMS =======
 
@@ -34,7 +37,7 @@ export default function useTeamKanban({teamId, boardId}) {
         const updatedItems = [...items, form];
         
         setItems(updatedItems); //locally
-        socket.emit("update_team_kanban", ({updatedItems, team:teamId})); //event
+        socket.emit("update_team_kanban", ({updatedItems, board:boardId})); //event
         await axios.post(`/teams/kanban/${boardId}`, form); //db
 
         setForm(prev => ({
@@ -49,7 +52,7 @@ export default function useTeamKanban({teamId, boardId}) {
 
         const updatedItems = items.filter(item => item.task !== task);
         setItems(updatedItems); //locally
-        socket.emit("update_team_kanban", ({updatedItems, team:teamId})); //event
+        socket.emit("update_team_kanban", ({updatedItems, board:boardId})); //event
         await axios.delete(`/teams/kanban/${boardId}`, {data: {task:task}}); //db
     }
 
@@ -63,7 +66,7 @@ export default function useTeamKanban({teamId, boardId}) {
         setItems(updatedItems); //locally
 
         setDragging(null);
-        socket.emit("stop_dragging", updatedItems); //event
+        socket.emit("stop_dragging", ({updatedItems, board:boardId})); //event
         
         await axios.patch(`/teams/kanban/${boardId}`, {task: dragging.task, type: type}); //db
     }
@@ -104,7 +107,7 @@ export default function useTeamKanban({teamId, boardId}) {
         let interval;
         if(dragging) {
             interval = setInterval(() => {
-                socket.volatile.emit("dragging", {dragging, position})
+                socket.volatile.emit("dragging", {dragging, position, board:boardId})
             }, 50);
         }
 
@@ -128,12 +131,15 @@ export default function useTeamKanban({teamId, boardId}) {
         socket.on("update_team_kanban", updatedItems => {
             setItems(updatedItems);
         })
+        socket.on("board_state", state=> {
+            console.log(state);
+        })
 
         return () => {
             socket.off("dragging");
             socket.off("stop_dragging");
-            socket.off("add_team_kanban");
-            socket.off("edit_team_kanban");
+            socket.off("update_team_kanban");
+            socket.off("board_state");
         }
     }, [])
 

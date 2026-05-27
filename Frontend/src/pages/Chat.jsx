@@ -1,8 +1,9 @@
 import useTokenDecode from "../hooks/useTokenDecode";
 import useChat from "../hooks/components/useChat";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import axios, { all } from "axios";
+import { useFetchAllMessages } from "../hooks/useFetch";
 
 export default function Chat() {
     const {payload} = useTokenDecode();
@@ -23,6 +24,19 @@ export default function Chat() {
         addContact
     } = useChat(payload?.username);
 
+    const {allMessages, setAllMessages} = useFetchAllMessages(payload?.username);
+    useEffect(()=>{
+        console.log(allMessages);
+    },[allMessages])
+
+    function getLastMessage (contact) {
+        const lastMessage = allMessages?.find(item => (item.user1===contact || item.user2===contact))?.message;
+        let lastMessageSender = allMessages?.find(item => (item.user1===contact || item.user2===contact))?.sender;
+            if(lastMessageSender===payload.username) lastMessageSender="You";
+        const lastMessageStatus = allMessages?.find(item => (item.user1===contact || item.user2===contact))?.status;
+        const lastMessageTime = allMessages?.find(item => (item.user1===contact || item.user2===contact))?.sent_at;
+        return [new Date(lastMessageTime).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"}), `${lastMessageSender}: ${lastMessage}`, lastMessageStatus];
+    }
 
     if(!payload) return <p>Loading...</p>
 
@@ -37,7 +51,7 @@ export default function Chat() {
             </div>
 
             <div className="users">
-                {!users? <p>Loading...</p> : users.map(user => (
+                {users?.map(user => (
                     <div 
                         className="user" 
                         onClick={(e) => {e.stopPropagation(); getConnection(user.username)}}
@@ -47,7 +61,11 @@ export default function Chat() {
                             <img src="/images/profile.svg" alt="" />
                             <div className={`status ${user.status}`} ></div>
                         </div>
-                        <p>{user.full_name}</p>
+                        <div className="other">
+                            <p>{user.full_name}</p>
+                            <p className="smaller">{getLastMessage(user.username)[0]}</p>
+                            <p className="smaller">{getLastMessage(user.username)[1]}</p>
+                        </div>
                     </div>
                 )) }
             </div>

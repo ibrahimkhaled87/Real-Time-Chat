@@ -1,18 +1,39 @@
 import { useRef, useState, useEffect } from "react"
+import { useParams } from "react-router-dom";
 import { socket } from "../sockets/socket";
+import useTokenDecode from "../hooks/useTokenDecode";
 
 export default function Whiteboard() {
     const canvasRef = useRef(null);
-
     const [drawing, setDrawing] = useState(false);
 
-    // Canvas setup
+    // Socket Emit
+    const {payload} = useTokenDecode();
+    const {boardId} = useParams();
+    useEffect(() => {
+        if(!payload) return;
+
+        socket.emit("join_board", {username: payload?.username, board: boardId})
+
+        const closeBoard = () => {
+            socket.emit("close_board", {username:payload?.username, board: boardId});
+        };
+        window.addEventListener("pagehide", closeBoard);
+        window.addEventListener("beforeunload", closeBoard);
+
+        return () => {
+            closeBoard();
+            window.removeEventListener("pagehide", closeBoard);
+            window.removeEventListener("beforeunload", closeBoard);
+        }
+    }, [payload])
+
+
+    // Canvas Setup
     const [color, setColor] = useState("black");
-    
     useEffect(() => {
         const canvas = canvasRef.current;
 
-        // Get display size
         const rect = canvas.getBoundingClientRect();
 
         // Set actual pixel resolution
@@ -24,6 +45,8 @@ export default function Whiteboard() {
         // Drawing style
         ctx.lineWidth = 3;
         ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.imageSmoothingEnabled = true;
         ctx.strokeStyle = color;
     }, []);
 
@@ -34,8 +57,8 @@ export default function Whiteboard() {
         socket.emit("color", color);
     }, [color])
 
-    
-    // Canvas draw
+
+    // Canvas Draw
     const startDraw = (e) => {
         setDrawing(true);
 
@@ -46,7 +69,6 @@ export default function Whiteboard() {
     
         socket.emit("start_draw", {x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY})
     };
-
     const draw = (e) => {
         if (!drawing) return;
 
@@ -57,7 +79,6 @@ export default function Whiteboard() {
 
         socket.emit("draw", {x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY})
     };
-
     const stopDraw = () => {
         setDrawing(false);
 
@@ -65,7 +86,7 @@ export default function Whiteboard() {
     };
 
 
-    // Canvas notes
+    // Canvas Notes
     const [notes, setNotes] = useState([]);
     const addSticky = () => {
         const newNote = {
@@ -88,10 +109,100 @@ export default function Whiteboard() {
             )
         );
     };
+    const stickyMouseDown = (e, note) => {
+        if (e.target !== e.currentTarget) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const offsetY = e.clientY - rect.top;
+
+        const move = (ev) => {
+            setNotes(prev =>
+                prev.map(n =>
+                    n.id === note.id
+                        ? {
+                            ...n,
+                            x: ev.clientX - offsetX,
+                            y: ev.clientY - offsetY
+                        }
+                        : n
+                )
+            );
+        };
+
+        window.addEventListener("mousemove", move);
+        window.addEventListener("mouseup", () => {
+            window.removeEventListener("mousemove", move);
+        }, { once: true });
+    };
+    const stickyInput = (e, note) => {
+        const updatedText = e.currentTarget.innerText;
+        setNotes(prev =>
+            prev.map(n =>
+                n.id === note.id ? { ...n, text: updatedText } : n
+            )
+        );
+    }
+
+    // Canvas Texts
+    const [texts, setTexts] = useState([]);
+    const addText = () => {
+        const newText = {
+            id: Date.now(),
+            x: 100,
+            y: 100,
+            text: "New text"
+        };
+        setTexts(prev => [...prev, newText]);
+    };
+    const dragText = (e, id) => {
+        const x = e.clientX;
+        const y = e.clientY;
+
+        setTexts(prev =>
+            prev.map(text =>
+                text.id === id
+                    ? { ...text, x, y }
+                    : text
+            )
+        );
+    };
+    const textMouseDown = (e, text) => {
+        if (e.target !== e.currentTarget) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const offsetY = e.clientY - rect.top;
+
+        const move = (ev) => {
+            setTexts(prev =>
+                prev.map(n =>
+                    n.id === text.id
+                        ? {
+                            ...n,
+                            x: ev.clientX - offsetX,
+                            y: ev.clientY - offsetY
+                        }
+                        : n
+                )
+            );
+        };
+
+        window.addEventListener("mousemove", move);
+        window.addEventListener("mouseup", () => {
+            window.removeEventListener("mousemove", move);
+        }, { once: true });
+    };
+    const textInput = (e, text) => {
+        const updatedText = e.currentTarget.innerText;
+        setTexts(prev =>
+            prev.map(n =>
+                n.id === text.id ? { ...n, text: updatedText } : n
+            )
+        );
+    }
 
 
-
-    // Socket listen
+    // Socket Listen
+    const [presence, setPresence] = useState();
     useEffect(() => {
         const ctx = canvasRef.current.getContext("2d");
 
@@ -111,6 +222,11 @@ export default function Whiteboard() {
 
         socket.on("color", (color) => {
             setColor(color);
+        })
+
+        socket.on("board_state", state => {
+            console.log(state);
+            setPresence(state.users);
         })
 
         return () => {
@@ -134,16 +250,15 @@ export default function Whiteboard() {
         />
 
         <div className="toolset">
-            <div className="color blue" onClick={() => setColor("blue")}></div>
-            <div className="color red" onClick={() => setColor("red")}></div>
-            <div className="color green" onClick={() => setColor("green")}></div>
-
-            <button onClick={addSticky}>
-                + Sticky Note
-            </button>
+            <img src="/images/whiteboard/pen.svg" alt="" />
+            <img src="/images/whiteboard/text.svg" alt="" onClick={addText}/>
+            <img src="/images/whiteboard/sticky.svg" alt="" onClick={addSticky} />
+            <img src="/images/whiteboard/shapes.svg" alt="" />
+            <img src="/images/whiteboard/lines.svg" alt="" />
+            <img src="/images/whiteboard/cursor.svg" alt="" />
         </div>
 
-
+        {/* Sticky */}
         {notes.map(note => (
             <div
                 key={note.id}
@@ -151,46 +266,45 @@ export default function Whiteboard() {
                 contentEditable
                 suppressContentEditableWarning
                 style={{
-                    position: "absolute",
                     left: note.x,
                     top: note.y,
-                    width: 150,
-                    minHeight: 100,
-                    background: "yellow",
-                    padding: 10,
-                    borderRadius: 8,
-                    cursor: "move"
                 }}
-                onInput={(e) => {
-                    const updatedText = e.currentTarget.innerText;
-
-                    setNotes(prev =>
-                        prev.map(n =>
-                            n.id === note.id ? { ...n, text: updatedText } : n
-                        )
-                    );
-
-                    socket.emit("update_note", {
-                        id: note.id,
-                        text: updatedText
-                    });
-                }}
-                onMouseDown={(e) => {
-                    const startX = e.clientX;
-                    const startY = e.clientY;
-
-                    const move = (ev) => {
-                        dragNote(ev, note.id);
-                    };
-
-                    window.addEventListener("mousemove", move);
-                    window.addEventListener("mouseup", () => {
-                        window.removeEventListener("mousemove", move);
-                    }, { once: true });
-                }}
+                onBlur={(e) => stickyInput(e, note)}
+                onMouseDown={(e)=>stickyMouseDown(e, note)}
             >
                 {note.text}
             </div>
         ))}
+
+        {/* Text */}
+        {texts.map(text => (
+            <div
+                key={text.id}
+                className="text"
+                contentEditable
+                suppressContentEditableWarning
+                style={{
+                    left: text.x,
+                    top: text.y,
+                }}
+                onBlur={(e) => textInput(e, text)}
+                onMouseDown={(e)=>textMouseDown(e, text)}
+            >
+                {text.text}
+            </div>
+        ))}
+
+        {/* Team Info */}
+        <div className="currentTeam">
+            <p>Team 1</p>
+        </div>
+        <div className="roomMembers">
+            {presence?.map(user =>
+                <div className="member">
+                    <img src="/images/profile.svg" alt="" />
+                    <p className="message">{user}</p>
+                </div>  
+            )}
+        </div>
     </div>
 }

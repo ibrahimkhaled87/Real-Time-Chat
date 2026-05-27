@@ -14,5 +14,10 @@ export default function socketHandler(io) {
         registerTicTacToe(io, socket);
         registerWhiteboard(io, socket);
         registerTeam(io, socket);
+
+        socket.on("cursor", ({x, y}) => {
+            console.log("Cursor", {x, y})
+            socket.broadcast.volatile.emit("remote-cursor", ({x, y}));
+        })
     })
 }

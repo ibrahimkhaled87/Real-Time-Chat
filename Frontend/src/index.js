@@ -11,6 +11,7 @@ import TicTacToe from "./pages/TicTacToe";
 import Whiteboard from "./pages/Whiteboard";
 import Team from "./pages/team/Team";
 import TeamKanban from "./pages/team/TeamKanban";
+import Cursor from "./pages/Cursor";
 
 const router = createBrowserRouter([
     {
@@ -35,6 +36,13 @@ const router = createBrowserRouter([
         </ProtectedRoute>
     },
     {
+        path: "/cursor",
+        element: 
+        <ProtectedRoute>
+            <Cursor />
+        </ProtectedRoute>
+    },
+    {
         path: "",
         element: 
         <ProtectedRoute>
@@ -54,8 +62,12 @@ const router = createBrowserRouter([
                 element: <Team />
             },
             {
-                path: "/team/:teamId/board/:boardId",
+                path: "/team/:teamId/kanban/:boardId",
                 element: <TeamKanban />
+            },
+            {
+                path: "/team/:teamId/whiteboard/:boardId",
+                element: <Whiteboard />
             }
         ]
     }

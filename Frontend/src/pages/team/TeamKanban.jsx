@@ -22,7 +22,7 @@ export default function TeamKanban() {
     } = useTeamKanban({teamId, boardId});
 
     //Get board name
-    const {teamBoards, setTeamBoards} = useFetchTeamBoards({team:teamId, type:'kanban'});
+    const {teamBoards, setTeamBoards} = useFetchTeamBoards({team:teamId});
 
     return <div className="teamKanban" onMouseUp={() => setDragging(null)} onMouseMove={mouseMove}>
         <h1>{teamBoards?.find(board => board.id==boardId)?.name}</h1>

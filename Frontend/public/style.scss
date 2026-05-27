@@ -130,6 +130,18 @@ body {
                         background-color: rgb(0, 255, 0);
                     }
                 }
+                .other {
+                    width: 100%;
+                    display: grid;
+                    grid-template-columns: auto auto;
+                    grid-template-rows: auto;
+                    justify-items: space-between;
+                    align-items: center;
+                    .smaller {
+                        font-size: smaller;
+                        color: rgb(56, 56, 56);
+                    }
+                }
             }
         }
     }
@@ -314,31 +326,22 @@ body {
     .toolset {
         position: fixed;
         top: calc(50% - 9em);
-        left: 5%;
-        background-color: lightgray;
-        border-radius: 2em;
-        width: 4em;
-        height: 20em;
-
+        left: 8em;
+        background-color: white;
+        border-radius: 5px;
+        width: 2.5em;
         display: flex;
         flex-direction: column;
-        gap: 1em;
-        padding: 0.5em;
-        box-sizing: border-box;
-        .color {
-            width: 100%;
-            aspect-ratio: 1;
-            border-radius: 50%;
+        gap: 0.2em;
+        padding: 0.2em;
+        box-shadow: 5px 5px 0.3em lightgray;
+        img {
+            border-radius: 5px;
+            padding: 0.5em;
             cursor: pointer;
-        }
-        .green {
-            background-color: green;
-        }
-        .red {
-            background-color: red;
-        }
-        .blue {
-            background-color: blue;
+            &:hover {
+                background-color: rgba(135, 207, 235, 0.481);
+            }
         }
     }
 
@@ -347,6 +350,76 @@ body {
         height: 100%;
         box-sizing: border-box;
         display: block;
+        background-color: hsl(0, 0%, 90%);
+    }
+
+    .sticky {
+        resize: both;
+        overflow: auto;
+        position: absolute;
+        height: 100px;
+        width: 150px;
+        background-color: yellow;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: move;
+    }
+
+    .text {
+        resize: both;
+        overflow: auto;
+        position: absolute;
+        width: 250px;
+        border: 1px dashed black;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: move; 
+    }
+
+    .currentTeam, .roomMembers {
+        cursor: pointer;
+        position: fixed;
+        top: 2em;
+        left: 8em;
+        width: 10em;
+        height: 2.5em;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+        font-weight: 500;
+        box-shadow: 5px 5px 0.3em lightgray;
+    }
+    .roomMembers {
+        left: unset;
+        right: 3em;
+        gap: 0.5em;
+        .member {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            img {
+                width: 2em;
+            }
+            .message {
+                position: absolute;
+                top: 3em;
+                color: white;
+                background-color: black;
+                border-radius: 10px;
+                padding: 0.5em;
+                display: none;
+                font-size: smaller;
+            }
+            &:hover {
+                .message {
+                    display: block;
+                }
+            }
+        }
     }
 }
 
@@ -460,7 +533,16 @@ body {
 
 }
 
-
+.cursor {
+    .element {
+        position: absolute;
+        width: 1em;
+        height: 1em;
+        background-color: red;
+        will-change: transform;
+        transform: translate3d(0,0,0);
+    }
+}
 
 .team {
     display: grid;
@@ -581,6 +663,12 @@ body {
             height: 13em;
             display: grid;
             grid-template-rows: 70% 30%;
+            position: relative;
+            p.delete {
+                cursor: pointer;
+                position: absolute;
+                right: 0.5em;
+            }
             img {
                 width: 100%;
                 height: 100%;
@@ -723,6 +811,7 @@ body {
 }
 
 
+//Components
 .overlay {
     background-color: rgba(0, 0, 0, 0.415);
     position: absolute;
@@ -739,5 +828,33 @@ body {
         border-radius: 10px;
         width: 30em;
         height: 20em;
+        padding: 2em;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1em;
     }
 }
+
+.alertMessage {
+    position: fixed;
+    top: 1em;
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    height: 2.5em;
+    padding: 0.5em 1em;
+    box-sizing: border-box;
+    border-radius: 10px;
+    background-color: #ecf0f1;
+    box-shadow: 10px 10px 0.5em rgba(0, 0, 0, 0.358);
+    justify-self: center;
+    img{
+        width: 1.5em;
+    }
+}
+
+
+//Media Queries

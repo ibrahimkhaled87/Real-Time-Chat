@@ -16,6 +16,19 @@ export const getTeams = async(req, res) => {
     res.json(data.rows);
 }
 
+export const postTeam = async(req, res) => {
+    console.log("POST team called");
+    console.log(req.body);
+    const {name, owner} = req.body;
+
+    //Does name + owner exist before?
+    let data = await db.query("SELECT * FROM workspaces WHERE name=$1 AND owner=$2", [name, owner]);
+    if(data.rows.length===1)
+        return res.status(400).json("Team name already exists");
+
+    data = await db.query("INSERT INTO workspaces(name, owner) VALUES($1, $2) RETURNING *", [name, owner]);
+    res.json(data.rows);
+}
 
 // Team members
 export const postTeamMember = async(req, res) => {
@@ -60,12 +73,35 @@ export const postTeamMessage = async(req, res) => {
 
 // Team boards
 export const getTeamBoards = async (req, res) => {
-    console.log("GET team kanbans");
+    console.log("GET team boards");
     console.log(req.query);
-    const {team, type} = req.query;
+    const {team} = req.query;
 
-    const data = await db.query("SELECT * FROM workspace_boards WHERE workspace_id=$1 AND type=$2", [team, type]);
+    const data = await db.query("SELECT * FROM workspace_boards WHERE workspace_id=$1", [team]);
     res.json(data.rows);
+}
+
+export const postTeamBoard = async(req, res) => {
+    console.log("POST team board");
+    console.log(req.body);
+    const {name, type, team} = req.body;
+
+    //Does board name + team exist before?
+    let data = await db.query("SELECT * FROM workspace_boards WHERE name=$1 AND type=$2 AND workspace_id=$3", [name, type, team]);
+    if(data.rows.length===1)
+        return res.status(200).json("Board name exists");
+
+    data = await db.query("INSERT INTO workspace_boards(name, workspace_id, type) VALUES($1, $2, $3) RETURNING *", [name, team, type]);
+    res.json(data.rows);
+}
+
+export const deleteTeamBoard = async(req, res) => {
+    console.log("DELETE team board");
+    console.log(req.params);
+    const {id} = req.params;
+
+    await db.query("DELETE FROM workspace_boards WHERE id=$1", [id]);
+    res.json("Deleted board");
 }
 
 

@@ -22,13 +22,6 @@ export default function Team() {
     //Selected tab
     const [selectedTab, setSelectedTab] = useState(null);
 
-    //Request team join
-    const [requested, setRequested] = useState();
-    const requestTeamJoin = (e) => {
-        e.preventDefault();
-        socket.emit("request_team_join", {user: payload.username, team: requested})
-    }
-
     //Overlay?
     const [overlay, setOverlay] = useState(false);
 
@@ -46,18 +39,18 @@ export default function Team() {
             </div>
             <ul className="team_features">
                 <li onClick={() => setSelectedTab("messages")}>Team Chat</li>
-                <li onClick={() => setSelectedTab("kanban")}>Kanban Boards</li>
+                <li onClick={() => setSelectedTab("boards")}>Boards</li>
             </ul>
         </div>
         <div className="right">
             {!selectedTab
                 ? <p>Select Tab</p> 
                 : selectedTab==="messages"? <TeamChat team={selectedTeam} />
-                : selectedTab==="kanban"? <TeamBoards team={selectedTeam} type="kanban" />
+                : selectedTab==="boards"? <TeamBoards team={selectedTeam} />
                 : null }
         </div>
 
-        {/* Create team */}
+        {/* Create team / Join team */}
         {overlay &&
             <Overlay info={overlay} onClose={()=>setOverlay(false)} />
         }

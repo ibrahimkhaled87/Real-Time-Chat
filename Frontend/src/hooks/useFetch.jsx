@@ -4,7 +4,7 @@ import { socket } from "../sockets/socket";
 
 // Users
 export function useFetchUsers(current) {
-    const [users, setUsers] = useState();
+    const [users, setUsers] = useState([]);
     useEffect(() => {
         if(!current) return;
 
@@ -43,6 +43,24 @@ export function useFetchMessages(conn_id) {
     return {messages, setMessages};
 }
 
+export function useFetchAllMessages(current) {
+    const [allMessages, setAllMessages] = useState([]);
+    useEffect(() => {
+        if(!current) return;
+        const getAllMessages = async () => {
+            try {
+                const response = await axios.get("/messages", {params: {current: current}});
+                setAllMessages(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getAllMessages();
+    }, [current])
+
+    return {allMessages, setAllMessages};
+}
+
 // Connections
 export function useFetchConnection(current) {
     const [connection, setConnection] = useState(null);
@@ -78,19 +96,19 @@ export function useFetchTeams(user) {
 }
 
 // Team boards
-export function useFetchTeamBoards({team, type}) {
+export function useFetchTeamBoards({team}) {
     const [teamBoards, setTeamBoards] = useState();
     useEffect(() => {
         const getData = async() => {
             try {
-                const response = await axios.get("/teams/boards", {params: {team: team, type: type}});
+                const response = await axios.get("/teams/boards", {params: {team: team}});
                 setTeamBoards(response.data);
             } catch (error) {
                 console.log(error);
             }
         }
         getData();
-    }, [])
+    }, [team])
 
     return {teamBoards, setTeamBoards};
 }
