@@ -12,14 +12,15 @@ const app = express();
 // Global Middleware
 app.use(express.json());
 app.use(bodyparser.urlencoded({extended: true}));
-app.use(cors({
+const corsOptions = {
   origin: [
     "http://localhost:3000",
     "https://real-time-chat-kohl-beta.vercel.app"
   ],
   credentials: true
-}));
-app.options("*", cors());
+};
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use("/uploads", express.static("uploads"));
 
 // Routes
