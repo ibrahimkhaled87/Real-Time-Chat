@@ -22,5 +22,9 @@ app.use("/connections", connectionRoutes);
 app.use("/messages", messageRoutes);
 app.use("/teams", teamRoutes);
 
+app.get("/", (req, res) => {
+  console.log("HIT WITHOUT DB");
+  res.json([{ test: true }]);
+});
 
 export default app;
