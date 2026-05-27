@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api/axios";
 import { socket } from "../sockets/socket";
 
 // Users
@@ -10,7 +10,7 @@ export function useFetchUsers(current) {
 
         const getData = async() => {
             try {
-                const response = await axios.get("/users", {params: {current: current} });
+                const response = await api.get("/users", {params: {current: current} });
                 setUsers(response.data);
             } catch (error) {
                 console.log("error");
@@ -29,7 +29,7 @@ export function useFetchMessages(conn_id) {
         if(!conn_id) return;
         const getMessages = async () => {
             try {
-                const response = await axios.get("/messages", {params: {conn_id: conn_id}})
+                const response = await api.get("/messages", {params: {conn_id: conn_id}})
                 setMessages(response.data);
             } catch (error) {
                 console.log(error);
@@ -49,7 +49,7 @@ export function useFetchAllMessages(current) {
         if(!current) return;
         const getAllMessages = async () => {
             try {
-                const response = await axios.get("/messages", {params: {current: current}});
+                const response = await api.get("/messages", {params: {current: current}});
                 setAllMessages(response.data);
             } catch (error) {
                 console.log(error);
@@ -66,7 +66,7 @@ export function useFetchConnection(current) {
     const [connection, setConnection] = useState(null);
     const getConnection = async(other_user) => {
         try {
-            const response = await axios.get("/connections", {params: {this_user: current, other_user: other_user}})
+            const response = await api.get("/connections", {params: {this_user: current, other_user: other_user}})
             setConnection(response.data);
         } catch (error) {
             console.log(error);
@@ -83,7 +83,7 @@ export function useFetchTeams(user) {
         if(!user) return;
         const getData = async() => {
             try {
-                const response = await axios.get("/teams", {params: {user: user}});
+                const response = await api.get("/teams", {params: {user: user}});
                 setTeams(response.data);
             } catch (error) {
                 console.log(error);
@@ -101,7 +101,7 @@ export function useFetchTeamBoards({team}) {
     useEffect(() => {
         const getData = async() => {
             try {
-                const response = await axios.get("/teams/boards", {params: {team: team}});
+                const response = await api.get("/teams/boards", {params: {team: team}});
                 setTeamBoards(response.data);
             } catch (error) {
                 console.log(error);

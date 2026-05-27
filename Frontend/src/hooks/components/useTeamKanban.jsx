@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 import { socket } from "../../sockets/socket";
 import useTokenDecode from "../useTokenDecode";
 
@@ -25,7 +25,7 @@ export default function useTeamKanban({teamId, boardId}) {
     const [items, setItems] = useState([]);
     useEffect(() => {
         const getData = async() => {
-            const response = await axios.get(`/teams/kanban/${boardId}`);
+            const response = await api.get(`/teams/kanban/${boardId}`);
             setItems(response.data);
         }
         getData();
@@ -38,7 +38,7 @@ export default function useTeamKanban({teamId, boardId}) {
         
         setItems(updatedItems); //locally
         socket.emit("update_team_kanban", ({updatedItems, board:boardId})); //event
-        await axios.post(`/teams/kanban/${boardId}`, form); //db
+        await api.post(`/teams/kanban/${boardId}`, form); //db
 
         setForm(prev => ({
             ...prev,
@@ -53,7 +53,7 @@ export default function useTeamKanban({teamId, boardId}) {
         const updatedItems = items.filter(item => item.task !== task);
         setItems(updatedItems); //locally
         socket.emit("update_team_kanban", ({updatedItems, board:boardId})); //event
-        await axios.delete(`/teams/kanban/${boardId}`, {data: {task:task}}); //db
+        await api.delete(`/teams/kanban/${boardId}`, {data: {task:task}}); //db
     }
 
     //Move item (stop dragging call)
@@ -68,7 +68,7 @@ export default function useTeamKanban({teamId, boardId}) {
         setDragging(null);
         socket.emit("stop_dragging", ({updatedItems, board:boardId})); //event
         
-        await axios.patch(`/teams/kanban/${boardId}`, {task: dragging.task, type: type}); //db
+        await api.patch(`/teams/kanban/${boardId}`, {task: dragging.task, type: type}); //db
     }
 
 

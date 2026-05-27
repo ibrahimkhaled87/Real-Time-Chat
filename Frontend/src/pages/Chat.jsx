@@ -2,7 +2,6 @@ import useTokenDecode from "../hooks/useTokenDecode";
 import useChat from "../hooks/components/useChat";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { useEffect, useState } from "react";
-import axios, { all } from "axios";
 import { useFetchAllMessages } from "../hooks/useFetch";
 
 export default function Chat() {

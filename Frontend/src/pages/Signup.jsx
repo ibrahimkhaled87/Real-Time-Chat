@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import axios from "axios";
+import api from "../api/axios";
 
 export default function Signup() {
     //Read form
@@ -18,7 +18,7 @@ export default function Signup() {
     const signup = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("/auth/signup", form);
+            const response = await api.post("/auth/signup", form);
             alert("Signup successful");
             navigate("/");
         } catch (error) {

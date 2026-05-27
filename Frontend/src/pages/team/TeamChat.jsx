@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../../api/axios";
 import { useEffect, useState } from "react";
 import useTokenDecode from "../../hooks/useTokenDecode";
 import { socket } from "../../sockets/socket";
@@ -13,7 +13,7 @@ export default function TeamChat({team, onClose}) {
     const [teamMessages, setTeamMessages] = useState(null);
     useEffect(() => {
         const getData = async() => {
-            const response = await axios.get("/teams/messages", {params: {team: team}})
+            const response = await api.get("/teams/messages", {params: {team: team}})
             setTeamMessages(response.data);
         }
         getData();
@@ -24,7 +24,7 @@ export default function TeamChat({team, onClose}) {
     const sendMessage = async(e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("/teams/messages", {team: team, message: message, sender: payload.username})
+            const response = await api.post("/teams/messages", {team: team, message: message, sender: payload.username})
             setMessage("");
         } catch (error) {
             console.log(error);

@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../api/axios";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import useTokenDecode from "../hooks/useTokenDecode";
@@ -12,7 +12,7 @@ export default function Overlay({info, onClose, setTeamBoards}) {
   const createTeam = async(e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/teams", {name:newTeam, owner:payload.username})
+      const response = api.post("/teams", {name:newTeam, owner:payload.username})
       console.log(response.data);
       setNewTeam("");
       onClose();
@@ -41,7 +41,7 @@ export default function Overlay({info, onClose, setTeamBoards}) {
   const createBoard = async(e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/teams/boards", {...newBoard, team:info[1]})
+      const response = await api.post("/teams/boards", {...newBoard, team:info[1]})
       setTeamBoards(prev => ([...prev, response.data[0]]))
       setNewBoard("");
       onClose();

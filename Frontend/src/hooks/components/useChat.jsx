@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import useTokenDecode from "../useTokenDecode";
 import {useFetchUsers, useFetchConnection, useFetchMessages} from "../useFetch";
-import axios from "axios";
+import api from "../../api/axios";
 import { socket } from "../../sockets/socket";
 
 export default function useChat(current) {
@@ -15,7 +15,7 @@ export default function useChat(current) {
         if (!message.trim()) return;
         e.preventDefault()
 
-        await axios.post("/messages", {conn_id: connection[0].id, message, sender: current});
+        await api.post("/messages", {conn_id: connection[0].id, message, sender: current});
         setMessage("");
     };
 
@@ -54,7 +54,7 @@ export default function useChat(current) {
                 const messageId = entry.target.getAttribute("data-id"); //Get id from el for db
                 if (processingRef.current.has(messageId)) return;
                 processingRef.current.add(messageId);
-                await axios.patch("/messages/seen", { id: messageId });
+                await api.patch("/messages/seen", { id: messageId });
                 observerRef.current?.unobserve(entry.target);
             });
         });
@@ -134,7 +134,7 @@ export default function useChat(current) {
         e.preventDefault();
         setNewContact("");
 
-        await axios.post("/connections", {current: payload.username, other: newContact});
+        await api.post("/connections", {current: payload.username, other: newContact});
     }
 
     return {

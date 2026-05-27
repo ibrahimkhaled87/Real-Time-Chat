@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import TeamChat from "./TeamChat";
-import axios from "axios";
 import useTokenDecode from "../../hooks/useTokenDecode";
 import { socket } from "../../sockets/socket";
 import TeamBoards from "./TeamBoards";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import axios from "axios";
+import api from "../api/axios";
 
 export default function Login() {
     //Read credintials
@@ -18,7 +18,7 @@ export default function Login() {
     const login = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("/auth/login", credintials);
+            const response = await api.post("/auth/login", credintials);
             alert("Login successful");
             localStorage.setItem("token", response.data);
             navigate("/");

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { socket } from "../../sockets/socket";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../api/axios";
 import useTokenDecode from "../useTokenDecode";
 
 export default function useNav() {
@@ -21,7 +21,7 @@ export default function useNav() {
     useEffect(() => { //Fetch
         if(!payload) return;
         const getData = async() => {
-            const response = await axios.get("/users/notifications", {params: {user: payload?.username}})
+            const response = await api.get("/users/notifications", {params: {user: payload?.username}})
             setNotifications(response.data);
         }
         getData();
@@ -44,7 +44,7 @@ export default function useNav() {
         const team = notification.match(/team (\d+)/)?.[1];
         
         //send to backend
-        const response = await axios.post("/teams/members", {user: user, team: team});
+        const response = await api.post("/teams/members", {user: user, team: team});
     }
     const rejectRequest = (notification) => {
         console.log(notification)
